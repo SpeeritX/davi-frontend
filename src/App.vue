@@ -1,22 +1,25 @@
 <template>
-  <div id="app">
+  <div id="container">
     <MapDemo />
+    <ChartDemo />
   </div>
 </template>
 
 <script>
 import MapDemo from "./components/MapDemo.vue";
+import ChartDemo from "./components/ChartDemo.vue";
 
 export default {
   name: "App",
   components: {
     MapDemo,
+    ChartDemo,
   },
 };
 </script>
 
 <style>
-#app {
+#container {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -25,8 +28,9 @@ export default {
   margin-top: 60px;
   display: flex;
   width: 100%;
-  padding: 2rem;
-  justify-content: center;
-  align-content: center;
+  max-width: calc(100% - 20rem);
+  padding: 0rem 10rem;
+  align-items: center;
+  flex-direction: column;
 }
 </style>
