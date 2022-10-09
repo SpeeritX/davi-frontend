@@ -9,6 +9,14 @@ import "leaflet/dist/leaflet.css";
 export default {
   name: "MapDemo",
   async mounted() {
+    // Fix icons path (leaflet doesn't support webpack by deafult)
+    delete L.Icon.Default.prototype._getIconUrl;
+    L.Icon.Default.mergeOptions({
+      iconRetinaUrl: require("leaflet/dist/images/marker-icon-2x.png"),
+      iconUrl: require("leaflet/dist/images/marker-icon.png"),
+      shadowUrl: require("leaflet/dist/images/marker-shadow.png"),
+    });
+
     var map = L.map("map").setView([51.505, -0.09], 13);
 
     L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
