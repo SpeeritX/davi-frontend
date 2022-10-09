@@ -12,7 +12,7 @@
     :height="height"
   />
 </template>
-  
+
 <script>
 import { Bar } from "vue-chartjs";
 import {
@@ -82,10 +82,9 @@ export default {
   },
 };
 </script>
-  
+
 <style scoped>
 .bar-chart {
   margin-top: 2rem;
 }
 </style>
-  
