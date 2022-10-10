@@ -5,15 +5,22 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint"
+    "lint": "vue-cli-service lint",
+    "prettier:check:ci": "./node_modules/.bin/prettier --check .",
+    "prettier:format": "./node_modules/.bin/prettier --write ."
   },
   "dependencies": {
+    "chart.js": "^3.9.1",
     "core-js": "^3.8.3",
-    "vue": "^3.2.13"
+    "leaflet": "^1.9.2",
+    "prettier": "^2.7.1",
+    "vue": "^3.2.13",
+    "vue-chartjs": "^4.1.2"
   },
   "devDependencies": {
     "@babel/core": "^7.12.16",
     "@babel/eslint-parser": "^7.12.16",
+    "@types/leaflet": "^1.8.0",
     "@vue/cli-plugin-babel": "~5.0.0",
     "@vue/cli-plugin-eslint": "~5.0.0",
     "@vue/cli-service": "~5.0.0",
