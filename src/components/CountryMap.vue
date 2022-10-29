@@ -1,5 +1,5 @@
 <template>
-  <div id="map"></div>
+  <div id="country-map"></div>
 </template>
 
 <script>
@@ -18,7 +18,7 @@ export default {
       shadowUrl: require("leaflet/dist/images/marker-shadow.png"),
     });
 
-    var map = L.map("map", {
+    var map = L.map("country-map", {
       zoomControl: false,
       maxZoom: 5,
       minZoom: 2,
@@ -26,7 +26,7 @@ export default {
         [-50, -180],
         [75, 180],
       ],
-      maxBoundsViscosity: 1
+      maxBoundsViscosity: 1,
     }).setView([50.45, 30.52], 3);
 
     L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
@@ -81,7 +81,7 @@ export default {
 </script>
 
 <style scoped>
-#map {
+#country-map {
   height: 500px;
   width: 600px;
   max-width: 100%;
