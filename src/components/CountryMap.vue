@@ -18,7 +18,7 @@ export default {
       shadowUrl: require("leaflet/dist/images/marker-shadow.png"),
     });
 
-    var map = L.map("country-map", {
+    const map = L.map("country-map", {
       zoomControl: false,
       maxZoom: 5,
       minZoom: 2,
@@ -49,7 +49,7 @@ export default {
     }
 
     function highlightFeature(e) {
-      var layer = e.target;
+      const layer = e.target;
 
       layer.setStyle({
         weight: 5,
@@ -71,7 +71,7 @@ export default {
       });
     }
 
-    var geojson;
+    let geojson;
     geojson = L.geoJson(countryData, {
       style: style,
       onEachFeature: onEachFeature,
