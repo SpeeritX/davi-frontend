@@ -4,7 +4,7 @@
       <MapDemo />
     </div>
     <div id="sidebar">
-      <!-- TODO: Minimap -->
+      <CountryMap />
       <ChartDemo id="charts" />
     </div>
   </div>
@@ -13,12 +13,14 @@
 <script>
 import MapDemo from "../components/MapDemo.vue";
 import ChartDemo from "../components/ChartDemo.vue";
+import CountryMap from "../components/CountryMap.vue";
 
 export default {
   name: "App",
   components: {
     MapDemo,
     ChartDemo,
+    CountryMap,
   },
 };
 </script>
@@ -33,7 +35,7 @@ export default {
   color: #2c3e50;
   display: flex;
   width: 100%;
-  max-width: calc(100% - 20rem);
+  max-width: calc(100% - 2rem);
   padding: 1rem;
   align-items: center;
   flex-direction: row;
@@ -49,11 +51,16 @@ export default {
   flex: 1;
   display: flex;
   flex-direction: column;
+  margin-left: 1rem;
 }
 
 #minimap,
 #charts {
   flex: 1;
   height: 100%;
+}
+
+#charts {
+  margin-top: 1rem;
 }
 </style>

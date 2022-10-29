@@ -8,7 +8,7 @@ import "leaflet/dist/leaflet.css";
 import countryData from "../assets/countries.json";
 
 export default {
-  name: "MapDemo",
+  name: "CountryMap",
   async mounted() {
     // Fix icons path (leaflet doesn't support webpack by deafult)
     delete L.Icon.Default.prototype._getIconUrl;
@@ -82,9 +82,7 @@ export default {
 
 <style scoped>
 #country-map {
-  height: 500px;
-  width: 600px;
-  max-width: 100%;
-  max-height: 100%;
+  width: 100%;
+  height: 100%;
 }
 </style>

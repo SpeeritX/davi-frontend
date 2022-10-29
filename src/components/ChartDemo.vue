@@ -85,6 +85,5 @@ export default {
 
 <style scoped>
 .bar-chart {
-  margin-top: 2rem;
 }
 </style>
