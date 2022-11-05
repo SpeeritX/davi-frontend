@@ -31,13 +31,15 @@ export default {
     }).setView([50.45, 30.52], 3);
 
     grayscale(L);
-    L.tileLayer.grayscale("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
-      maxZoom: 5,
-      minZoom: 2,
-      noWrap: true,
-      attribution:
-        '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
-    }).addTo(map);
+    L.tileLayer
+      .grayscale("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        maxZoom: 5,
+        minZoom: 2,
+        noWrap: true,
+        attribution:
+          '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+      })
+      .addTo(map);
 
     function style() {
       return {
