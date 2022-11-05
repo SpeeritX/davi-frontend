@@ -6,6 +6,7 @@
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import countryData from "../assets/countries.json";
+import grayscale from "../tools/TileLayer.Grayscale";
 
 export default {
   name: "CountryMap",
@@ -29,7 +30,8 @@ export default {
       maxBoundsViscosity: 1,
     }).setView([50.45, 30.52], 3);
 
-    L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+    grayscale(L);
+    L.tileLayer.grayscale("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
       maxZoom: 5,
       minZoom: 2,
       noWrap: true,
