@@ -30,8 +30,8 @@ export default {
   },
   async mounted() {
     const response = await FlightsService.getFlights({
-      time_1: "2022-02-28",
-      time_2: "2022-02-28",
+      date_1: "2022-05-27",
+      date_2: "2022-05-27",
     });
     this.flights = response.data;
   },

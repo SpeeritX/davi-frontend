@@ -18,6 +18,7 @@ export default {
       shadowUrl: require("leaflet/dist/images/marker-shadow.png"),
     });
 
+    // Prepare map
     var map = L.map("flight-map", {
       zoomControl: false,
       maxZoom: 11,
@@ -27,20 +28,81 @@ export default {
         [40, 20],
       ],
       maxBoundsViscosity: 1,
-    }).setView([50.45, 30.52], 6);
-
+    }).setView([50.45, 30.52], 6.3);
     L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
       maxZoom: 19,
       attribution:
         '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
     }).addTo(map);
 
+    // -- Flights --
+
+    const splitFlightLine = (path) => {
+      // Splits flight paths if the distance between two points is too long
+      const distance = (point1, point2) => {
+        const distanceX = point1[0] - point2[0];
+        const distanceY = point1[1] - point2[1];
+        return Math.sqrt(distanceX * distanceX + distanceY * distanceY);
+      };
+      const splittedPaths = [];
+      let start = 0;
+      for (let i = 1; i < path.length; ++i) {
+        if (distance(path[i], path[i - 1]) > 2) {
+          splittedPaths.push(path.slice(start, i));
+          start = i;
+        }
+      }
+      splittedPaths.push(path.slice(start, path.length));
+      return splittedPaths;
+    };
+
+    // const sliceWithStep = (data, step) => {
+    //   // Decreases points density to increase performance
+    //   let i = 0;
+    //   const processedData = [];
+    //   while (i < data.length) {
+    //     processedData.push(data[i]);
+    //     i += step;
+    //   }
+    //   if (i < data.length - 1) {
+    //     processedData.append(data[data.length - 1]);
+    //   }
+    //   return processedData;
+    // };
+
+    // Draw grey lines
+    this.flights.forEach((flight) => {
+      const positions = JSON.parse(
+        flight["latitude, longitude"].replaceAll("'", '"')
+      );
+      L.polyline([positions[0], positions[positions.length - 1]], {
+        opacity: 0.3,
+        color: "blue",
+        weight: 1,
+      }).addTo(map);
+    });
+
     // Draw Fligths
     this.flights.forEach((flight) => {
       const positions = JSON.parse(
         flight["latitude, longitude"].replaceAll("'", '"')
       );
-      L.polyline(positions, { opacity: 0.5 }).addTo(map);
+      const lines = splitFlightLine(positions);
+      // // Random color for each path
+      // const color = "#" + Math.floor(Math.random() * 16777215).toString(16);
+      lines.map((path) => {
+        L.polyline(path, {
+          opacity: 0.3,
+          color: "orange",
+          weight: 1,
+        }).addTo(map);
+      });
+      // // Add circle for each point
+      // path.map((point) =>
+      //   L.circleMarker(point, { radius: 1, color })
+      //     .on("click", () => onClick(flight, positions))
+      //     .addTo(map)
+      // );
     });
   },
 };
