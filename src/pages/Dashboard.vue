@@ -1,7 +1,7 @@
 <template>
   <div id="main-container">
     <div id="main-content">
-      <MapDemo />
+      <FlightsMap :flights="flights" />
     </div>
     <div id="sidebar">
       <CountryMap />
@@ -11,16 +11,29 @@
 </template>
 
 <script>
-import MapDemo from "../components/MapDemo.vue";
+import FlightsMap from "../components/FlightsMap.vue";
 import ChartDemo from "../components/ChartDemo.vue";
 import CountryMap from "../components/CountryMap.vue";
+import FlightsService from "../services/flightsService";
 
 export default {
   name: "App",
   components: {
-    MapDemo,
+    FlightsMap,
     ChartDemo,
     CountryMap,
+  },
+  data() {
+    return {
+      flights: [],
+    };
+  },
+  async mounted() {
+    const response = await FlightsService.getFlights({
+      date_1: "2022-05-27",
+      date_2: "2022-05-27",
+    });
+    this.flights = response.data;
   },
 };
 </script>
