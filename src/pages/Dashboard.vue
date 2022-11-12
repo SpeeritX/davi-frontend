@@ -5,14 +5,14 @@
     </div>
     <div id="sidebar">
       <CountryMap />
-      <ChartDemo id="charts" />
+      <ParallelSets />
     </div>
   </div>
 </template>
 
 <script>
 import FlightsMap from "../components/FlightsMap.vue";
-import ChartDemo from "../components/ChartDemo.vue";
+import ParallelSets from "../components/ParallelSets.vue";
 import CountryMap from "../components/CountryMap.vue";
 import FlightsService from "../services/flightsService";
 
@@ -20,12 +20,13 @@ export default {
   name: "App",
   components: {
     FlightsMap,
-    ChartDemo,
+    ParallelSets,
     CountryMap,
   },
   data() {
     return {
       flights: [],
+      parallelSets: []
     };
   },
   async mounted() {
