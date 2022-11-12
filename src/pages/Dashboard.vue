@@ -2,7 +2,7 @@
   <div id="main-container">
     <div id="main-content">
       <FlightsMap id="main-map" :flights="flights" />
-      <TimelineChart
+      <DateSlider
         id="timeline"
         @update-dates="updateDates"
         minDate="2022-02-22"
@@ -21,7 +21,7 @@ import FlightsMap from "../components/FlightsMap.vue";
 import ParallelSets from "../components/ParallelSets.vue";
 import CountryMap from "../components/CountryMap.vue";
 import FlightsService from "../services/flightsService";
-import TimelineChart from "../components/TimelineChart.vue";
+import DateSlider from "../components/DateSlider.vue";
 
 export default {
   name: "App",
@@ -29,7 +29,7 @@ export default {
     FlightsMap,
     ParallelSets,
     CountryMap,
-    TimelineChart,
+    DateSlider,
   },
   data() {
     return {
@@ -76,23 +76,22 @@ export default {
 
 #main-content {
   height: 100%;
-  flex: 3;
+  flex: 2 0 0;
   display: flex;
   flex-direction: column;
 }
 
 #main-map {
-  flex: 10;
+  flex: 10 1 0;
 }
 
 #timeline {
-  flex: 1;
-  margin-top: 1rem;
+  flex: 1 1 0;
 }
 
 #sidebar {
   height: 100%;
-  flex: 1;
+  flex: 1 0 0;
   display: flex;
   flex-direction: column;
   margin-left: 1rem;
