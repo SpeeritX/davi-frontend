@@ -2,7 +2,12 @@
   <div id="main-container">
     <div id="main-content">
       <FlightsMap id="main-map" :flights="flights" />
-      <TimelineChart id="timeline" @update-dates="updateDates" />
+      <TimelineChart
+        id="timeline"
+        @update-dates="updateDates"
+        minDate="2022-02-22"
+        maxDate="2022-06-18"
+      />
     </div>
     <div id="sidebar">
       <CountryMap />

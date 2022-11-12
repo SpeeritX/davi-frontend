@@ -3,7 +3,7 @@
     <MultiRangeSlider
       baseClassName="multi-range-slider-bar-only"
       :min="0"
-      :max="100"
+      :max="maxSliderRange"
       :step="1"
       :minValue="rawMinValue"
       :maxValue="rawMaxValue"
@@ -38,13 +38,25 @@ export default {
     return {
       rawMinValue: 0,
       rawMaxValue: 1,
-      baseDate: new Date("2022-02-22"),
-      minDatePicker: "2022-02-22",
-      maxDatePicker: "2022-02-22",
+      minDatePicker: "",
+      maxDatePicker: "",
     };
   },
   mounted() {
     this.rawMaxValue = 0;
+    this.maxDatePicker = this.minDate;
+    this.baseDatePicker = this.minDate;
+  },
+  computed: {
+    baseDate() {
+      // +2 hours to fix issues with substracting dates with summer and winter time
+      return new Date(this.minDate + " 2:00:00");
+    },
+    maxSliderRange() {
+      const value = this.dateStringToRawValue(this.maxDate);
+      console.log("maxSliderRange");
+      return value;
+    },
   },
   methods: {
     updateRawValues(e) {
@@ -55,14 +67,15 @@ export default {
     },
     rawValueToDateString(value) {
       const newDate = new Date(this.baseDate);
-      newDate.setDate(newDate.getDate() + value);
+      const days = newDate.getDate() + value;
+      newDate.setDate(days);
       const dateString = newDate.toISOString().split("T")[0];
       return dateString;
     },
     dateStringToRawValue(date) {
       const timeDifference = new Date(date) - this.baseDate;
-      const day = Math.floor(timeDifference / (24 * 3600 * 1000));
-      return day;
+      const days = Math.round(timeDifference / (24 * 3600 * 1000));
+      return days;
     },
     emitUpdateDates() {
       this.$emit("updateDates", {

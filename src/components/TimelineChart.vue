@@ -1,7 +1,11 @@
 <template>
   <div>
     <div id="timeline-chart"></div>
-    <DateSlider @update-dates="updateDates" />
+    <DateSlider
+      @update-dates="updateDates"
+      :minDate="minDate"
+      :maxDate="maxDate"
+    />
   </div>
 </template>
 
@@ -13,7 +17,16 @@ import DateSlider from "./DateSlider.vue";
 export default {
   name: "TimelineChart",
   components: { DateSlider },
-  props: {},
+  props: {
+    minDate: {
+      type: String,
+      required: true,
+    },
+    maxDate: {
+      type: String,
+      required: true,
+    },
+  },
   data() {
     return {};
   },
