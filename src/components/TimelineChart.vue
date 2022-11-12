@@ -28,20 +28,22 @@ export default {
     },
   },
   data() {
-    return { numberOfDataPoints: 116 };
+    return { numberOfDataPoints: 117 };
   },
   methods: {
     updateDates(dates) {
       this.$emit("updateDates", dates);
     },
     onResize() {
-      const containerWidth = this.$refs.timelineChartContainer.clientWidth;
-      const scale = containerWidth / this.numberOfDataPoints + 0.001;
-      const leftMargin = (containerWidth - this.numberOfDataPoints) / 2;
-      select("#timeline-chart-container")
-        .selectAll(".horizon")
-        .style("scale", `${scale} 1`)
-        .style("margin-left", `${leftMargin}px`);
+      if (this.$refs.timelineChartContainer) {
+        const containerWidth = this.$refs.timelineChartContainer.clientWidth;
+        const scale = containerWidth / this.numberOfDataPoints + 0.001;
+        const leftMargin = (containerWidth - this.numberOfDataPoints) / 2;
+        select("#timeline-chart-container")
+          .selectAll(".horizon")
+          .style("scale", `${scale} 1`)
+          .style("margin-left", `${leftMargin}px`);
+      }
     },
   },
   mounted() {
