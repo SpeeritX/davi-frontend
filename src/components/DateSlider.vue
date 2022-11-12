@@ -6,15 +6,20 @@
       :max="maxSliderRange"
       :step="1"
       :minValue="rawMinValue"
-      :maxValue="rawMaxValue"
+      :maxValue="visibleRawMaxValue"
       @input="updateRawValues"
-      :range-margin="0"
     />
-    <label for="minDate">Min Date</label>
-    <input type="date" id="minDate" v-model="minDatePicker" />
-    <label for="maxDate">Max Date</label>
-    <input type="date" id="maxDate" v-model="maxDatePicker" />
-    <button @click="emitUpdateDates">Confirm</button>
+    <div class="timeline-controls">
+      <div>
+        <label for="minDate">Min Date</label>
+        <input type="date" id="minDate" v-model="minDatePicker" />
+      </div>
+      <div>
+        <label for="maxDate">Max Date</label>
+        <input type="date" id="maxDate" v-model="maxDatePicker" />
+      </div>
+      <button @click="emitUpdateDates">Confirm</button>
+    </div>
   </div>
 </template>
   
@@ -54,13 +59,20 @@ export default {
     },
     maxSliderRange() {
       const value = this.dateStringToRawValue(this.maxDate);
-      return value;
+      // We want to see the chart for the chosen day between slider handles
+      // So, the right handle is shifted one position to the right
+      // Thus, we need to add one to the slider range.
+      return value + 1;
+    },
+    visibleRawMaxValue() {
+      return this.rawMaxValue + 1;
     },
   },
   methods: {
     updateRawValues(e) {
       this.rawMinValue = e.minValue;
-      this.rawMaxValue = e.maxValue;
+      // The right handle is shifted 1 position to the right (see maxSliderRange())
+      this.rawMaxValue = e.maxValue - 1;
       this.minDatePicker = this.rawValueToDateString(this.rawMinValue);
       this.maxDatePicker = this.rawValueToDateString(this.rawMaxValue);
     },
@@ -102,5 +114,51 @@ export default {
   
   <style>
 @import "/node_modules/multi-range-slider-vue/MultiRangeSliderBarOnly.css";
+
+.timeline-controls {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+}
+
+.timeline-controls div,
+.timeline-controls button {
+  margin-left: 1rem;
+}
+
+.timeline-controls input {
+  margin-left: 0.3rem;
+}
+
+.multi-range-slider-bar-only {
+  margin-top: -41px;
+  padding: 0;
+  margin-bottom: 20px;
+}
+
+.multi-range-slider-bar-only .bar {
+  height: 40px;
+}
+.multi-range-slider-bar-only .bar-left,
+.multi-range-slider-bar-only .bar-right {
+  background-color: transparent;
+  border-radius: 0;
+}
+
+.multi-range-slider-bar-only .bar-inner {
+  background-color: transparent;
+  backdrop-filter: brightness(120%) hue-rotate(10deg);
+  box-shadow: none;
+  border: none;
+}
+
+.multi-range-slider-bar-only .thumb::before {
+  top: 45px;
+  background-color: white;
+  margin: -6px;
+  width: 12px;
+  border-radius: 4px;
+  box-shadow: inset 0px 0px 5px gray;
+}
 </style>
   
