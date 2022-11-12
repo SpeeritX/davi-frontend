@@ -11,14 +11,14 @@
     </div>
     <div id="sidebar">
       <CountryMap />
-      <ChartDemo id="charts" />
+      <ParallelSets />
     </div>
   </div>
 </template>
 
 <script>
 import FlightsMap from "../components/FlightsMap.vue";
-import ChartDemo from "../components/ChartDemo.vue";
+import ParallelSets from "../components/ParallelSets.vue";
 import CountryMap from "../components/CountryMap.vue";
 import FlightsService from "../services/flightsService";
 import TimelineChart from "../components/TimelineChart.vue";
@@ -27,7 +27,7 @@ export default {
   name: "App",
   components: {
     FlightsMap,
-    ChartDemo,
+    ParallelSets,
     CountryMap,
     TimelineChart,
   },

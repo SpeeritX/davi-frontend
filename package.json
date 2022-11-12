@@ -21,9 +21,11 @@
     "d3-selection": "^3.0.0",
     "leaflet": "^1.9.2",
     "multi-range-slider-vue": "^1.1.4",
+    "plotly.js-dist": "^2.16.1",
     "prettier": "^2.7.1",
     "vue": "^3.2.13",
     "vue-chartjs": "^4.1.2",
+    "vue-csv-import": "^4.1.2",
     "vue-router": "^4.1.6"
   },
   "devDependencies": {
