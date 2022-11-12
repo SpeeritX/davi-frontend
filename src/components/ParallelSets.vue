@@ -14,25 +14,38 @@ const getData = async () => {
   });
   console.log(response)
   const parallel = response.data.data;
+  var SPIDim = {
+      values: parallel.map((val) => val[3]),
+      label: "SPI"
+    };
+
+  var squawkDim = {
+      values: parallel.map((val) => val[4]),
+      label: "Squawk"
+  };
+
+  var ukraineDim = {
+      values: parallel.map((val) => val[5]),
+      label: "Ukraine",
+  };
+
+  var color = ukraineDim.values
+  console.log(typeof(ukraineDim.values[0]))
+  var colorscale = [[0, 'lightsteelblue'], [1, 'mediumseagreen']];
+
   var trace1 = {
     type: "parcats",
-    dimensions: [
-      {
-        label: "Origin country",
-        values: parallel.map((val) => val[0]),
-      },
-      {
-        label: "was in Ukraine",
-        values: parallel.map((val) => val[1]),
-      },
-      {
-        label: "altitude group",
-        values: parallel.map((val) => val[2]),
-      },
-    ],
+    dimensions: [SPIDim, squawkDim,ukraineDim],
+    line: {color: color,
+              colorscale: colorscale},
+       hoveron: 'color',
+       hoverinfo: 'count+probability',
+       labelfont: {size: 14},
+    arrangement: 'freeform'
   };
   var data = [trace1];
-  Plotly.newPlot("parallel-sets", data);
+  var layout = {width: 600};
+  Plotly.newPlot("parallel-sets", data, layout );
 };
 
 onMounted(async () => {
