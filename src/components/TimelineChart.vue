@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div id="timeline-chart"></div>
+    <div ref="timelineChartContainer" id="timeline-chart-container"></div>
     <DateSlider
       @update-dates="updateDates"
       :minDate="minDate"
@@ -28,19 +28,27 @@ export default {
     },
   },
   data() {
-    return {};
+    return { numberOfDataPoints: 116 };
   },
   methods: {
     updateDates(dates) {
       this.$emit("updateDates", dates);
     },
+    onResize() {
+      const containerWidth = this.$refs.timelineChartContainer.clientWidth;
+      const scale = containerWidth / this.numberOfDataPoints + 0.001;
+      const leftMargin = (containerWidth - this.numberOfDataPoints) / 2;
+      select("#timeline-chart-container")
+        .selectAll(".horizon")
+        .style("scale", `${scale} 1`)
+        .style("margin-left", `${leftMargin}px`);
+    },
   },
-
   mounted() {
     var d3 = require("d3-horizon-chart");
 
     var series = [];
-    for (var i = 0, variance = 0; i < 100; i++) {
+    for (var i = 0, variance = 0; i < this.numberOfDataPoints; i++) {
       variance += (Math.random() - 0.5) / 10;
       series.push(Math.abs(Math.cos(i / 100) + variance));
     }
@@ -57,24 +65,32 @@ export default {
         "#d73027",
       ]);
 
-    select("#timeline-chart")
+    select("#timeline-chart-container")
       .selectAll(".horizon")
       .data([series])
       .enter()
       .append("div")
       .attr("class", "horizon")
       .each(horizonChart);
+    this.onResize();
+    window.addEventListener("resize", () => {
+      this.onResize();
+    });
   },
 };
 </script>
 
 <style>
 @import "/node_modules/multi-range-slider-vue/MultiRangeSliderBarOnly.css";
+
+#timeline-chart-container {
+  border: solid 1px #000;
+  overflow: hidden;
+}
 .horizon {
-  border-top: solid 1px #000;
-  border-bottom: solid 1px #000;
   overflow: hidden;
   position: relative;
+  width: fit-content;
 }
 
 .horizon + .horizon {

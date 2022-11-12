@@ -54,7 +54,6 @@ export default {
     },
     maxSliderRange() {
       const value = this.dateStringToRawValue(this.maxDate);
-      console.log("maxSliderRange");
       return value;
     },
   },

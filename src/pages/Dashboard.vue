@@ -40,7 +40,6 @@ export default {
   },
   methods: {
     async updateDates(dates) {
-      console.log(dates);
       this.minDate = dates.minDate;
       this.maxDate = dates.maxDate;
       await this.fetchFlights();
