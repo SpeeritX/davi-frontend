@@ -1,7 +1,8 @@
 <template>
   <div id="main-container">
     <div id="main-content">
-      <FlightsMap :flights="flights" />
+      <FlightsMap id="main-map" :flights="flights" />
+      <TimelineChart id="timeline" @update-dates="updateDates" />
     </div>
     <div id="sidebar">
       <CountryMap />
@@ -15,6 +16,7 @@ import FlightsMap from "../components/FlightsMap.vue";
 import ChartDemo from "../components/ChartDemo.vue";
 import CountryMap from "../components/CountryMap.vue";
 import FlightsService from "../services/flightsService";
+import TimelineChart from "../components/TimelineChart.vue";
 
 export default {
   name: "App",
@@ -22,18 +24,32 @@ export default {
     FlightsMap,
     ChartDemo,
     CountryMap,
+    TimelineChart,
   },
   data() {
     return {
       flights: [],
+      minDate: "2022-02-22",
+      maxDate: "2022-02-22",
     };
   },
+  methods: {
+    async updateDates(dates) {
+      console.log(dates);
+      this.minDate = dates.minDate;
+      this.maxDate = dates.maxDate;
+      await this.fetchFlights();
+    },
+    async fetchFlights() {
+      const response = await FlightsService.getFlights({
+        date_1: this.minDate,
+        date_2: this.maxDate,
+      });
+      this.flights = response.data;
+    },
+  },
   async mounted() {
-    const response = await FlightsService.getFlights({
-      date_1: "2022-05-27",
-      date_2: "2022-05-27",
-    });
-    this.flights = response.data;
+    await this.fetchFlights();
   },
 };
 </script>
@@ -57,6 +73,17 @@ export default {
 #main-content {
   height: 100%;
   flex: 3;
+  display: flex;
+  flex-direction: column;
+}
+
+#main-map {
+  flex: 10;
+}
+
+#timeline {
+  flex: 1;
+  margin-top: 1rem;
 }
 
 #sidebar {

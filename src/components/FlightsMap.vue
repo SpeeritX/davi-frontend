@@ -1,5 +1,7 @@
 <template>
-  <div id="flight-map"></div>
+  <div>
+    <div id="flight-map"></div>
+  </div>
 </template>
 
 <script>
@@ -9,7 +11,13 @@ import "leaflet/dist/leaflet.css";
 export default {
   name: "FlightsMap",
   props: ["flights"],
-  async updated() {
+  data() {
+    return {
+      map: null,
+      layers: null,
+    };
+  },
+  async mounted() {
     // Fix icons path (leaflet doesn't support webpack by deafult)
     delete L.Icon.Default.prototype._getIconUrl;
     L.Icon.Default.mergeOptions({
@@ -19,7 +27,7 @@ export default {
     });
 
     // Prepare map
-    var map = L.map("flight-map", {
+    this.map = L.map("flight-map", {
       zoomControl: false,
       maxZoom: 11,
       minZoom: 6,
@@ -33,10 +41,14 @@ export default {
       maxZoom: 19,
       attribution:
         '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
-    }).addTo(map);
+    }).addTo(this.map);
+    this.layers = L.layerGroup();
+  },
+  async updated() {
+    this.layers.removeFrom(this.map);
+    this.layers.clearLayers();
 
     // -- Flights --
-
     const splitFlightLine = (path) => {
       // Splits flight paths if the distance between two points is too long
       const distance = (point1, point2) => {
@@ -75,11 +87,13 @@ export default {
       const positions = JSON.parse(
         flight["latitude, longitude"].replaceAll("'", '"')
       );
-      L.polyline([positions[0], positions[positions.length - 1]], {
-        opacity: 0.3,
-        color: "blue",
-        weight: 1,
-      }).addTo(map);
+      this.layers.addLayer(
+        L.polyline([positions[0], positions[positions.length - 1]], {
+          opacity: 0.3,
+          color: "blue",
+          weight: 1,
+        })
+      );
     });
 
     // Draw Fligths
@@ -90,12 +104,15 @@ export default {
       const lines = splitFlightLine(positions);
       // // Random color for each path
       // const color = "#" + Math.floor(Math.random() * 16777215).toString(16);
+
       lines.map((path) => {
-        L.polyline(path, {
-          opacity: 0.3,
-          color: "orange",
-          weight: 1,
-        }).addTo(map);
+        this.layers.addLayer(
+          L.polyline(path, {
+            opacity: 0.3,
+            color: "orange",
+            weight: 1,
+          })
+        );
       });
       // // Add circle for each point
       // path.map((point) =>
@@ -104,6 +121,7 @@ export default {
       //     .addTo(map)
       // );
     });
+    this.layers.addTo(this.map);
   },
 };
 </script>
