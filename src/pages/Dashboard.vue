@@ -10,41 +10,25 @@
       />
     </div>
     <div id="sidebar">
-<<<<<<< HEAD
       <MatrixChart />
-      <ChartDemo id="charts" />
-=======
-      <CountryMap />
       <ParallelSets />
->>>>>>> origin/main
     </div>
   </div>
 </template>
 
 <script>
-<<<<<<< HEAD
-import MapDemo from "../components/MapDemo.vue";
-import ChartDemo from "../components/ChartDemo.vue";
 import MatrixChart from "../components/MatrixChart.vue";
-=======
 import FlightsMap from "../components/FlightsMap.vue";
 import ParallelSets from "../components/ParallelSets.vue";
-import CountryMap from "../components/CountryMap.vue";
 import FlightsService from "../services/flightsService";
 import DateSlider from "../components/DateSlider.vue";
->>>>>>> origin/main
 
 export default {
   name: "App",
   components: {
-<<<<<<< HEAD
-    MapDemo,
-    ChartDemo,
     MatrixChart,
-=======
     FlightsMap,
     ParallelSets,
-    CountryMap,
     DateSlider,
   },
   data() {
@@ -70,7 +54,6 @@ export default {
   },
   async mounted() {
     await this.fetchFlights();
->>>>>>> origin/main
   },
 };
 </script>
