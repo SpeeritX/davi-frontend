@@ -4,7 +4,7 @@
       <MapDemo />
     </div>
     <div id="sidebar">
-      <CountryMap />
+      <MatrixChart />
       <ChartDemo id="charts" />
     </div>
   </div>
@@ -13,14 +13,14 @@
 <script>
 import MapDemo from "../components/MapDemo.vue";
 import ChartDemo from "../components/ChartDemo.vue";
-import CountryMap from "../components/CountryMap.vue";
+import MatrixChart from "../components/MatrixChart.vue";
 
 export default {
   name: "App",
   components: {
     MapDemo,
     ChartDemo,
-    CountryMap,
+    MatrixChart,
   },
 };
 </script>
