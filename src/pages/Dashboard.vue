@@ -1,26 +1,76 @@
 <template>
   <div id="main-container">
     <div id="main-content">
-      <MapDemo />
+      <FlightsMap id="main-map" :flights="flights" />
+      <DateSlider
+        id="timeline"
+        @update-dates="updateDates"
+        minDate="2022-02-22"
+        maxDate="2022-06-18"
+      />
     </div>
     <div id="sidebar">
+<<<<<<< HEAD
       <MatrixChart />
       <ChartDemo id="charts" />
+=======
+      <CountryMap />
+      <ParallelSets />
+>>>>>>> origin/main
     </div>
   </div>
 </template>
 
 <script>
+<<<<<<< HEAD
 import MapDemo from "../components/MapDemo.vue";
 import ChartDemo from "../components/ChartDemo.vue";
 import MatrixChart from "../components/MatrixChart.vue";
+=======
+import FlightsMap from "../components/FlightsMap.vue";
+import ParallelSets from "../components/ParallelSets.vue";
+import CountryMap from "../components/CountryMap.vue";
+import FlightsService from "../services/flightsService";
+import DateSlider from "../components/DateSlider.vue";
+>>>>>>> origin/main
 
 export default {
   name: "App",
   components: {
+<<<<<<< HEAD
     MapDemo,
     ChartDemo,
     MatrixChart,
+=======
+    FlightsMap,
+    ParallelSets,
+    CountryMap,
+    DateSlider,
+  },
+  data() {
+    return {
+      flights: [],
+      minDate: "2022-02-22",
+      maxDate: "2022-02-22",
+    };
+  },
+  methods: {
+    async updateDates(dates) {
+      this.minDate = dates.minDate;
+      this.maxDate = dates.maxDate;
+      await this.fetchFlights();
+    },
+    async fetchFlights() {
+      const response = await FlightsService.getFlights({
+        date_1: this.minDate,
+        date_2: this.maxDate,
+      });
+      this.flights = response.data;
+    },
+  },
+  async mounted() {
+    await this.fetchFlights();
+>>>>>>> origin/main
   },
 };
 </script>
@@ -43,12 +93,22 @@ export default {
 
 #main-content {
   height: 100%;
-  flex: 3;
+  flex: 2 0 0;
+  display: flex;
+  flex-direction: column;
+}
+
+#main-map {
+  flex: 10 1 0;
+}
+
+#timeline {
+  flex: 1 1 0;
 }
 
 #sidebar {
   height: 100%;
-  flex: 1;
+  flex: 1 0 0;
   display: flex;
   flex-direction: column;
   margin-left: 1rem;
