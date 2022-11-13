@@ -60,15 +60,15 @@ export default {
 
 <style scoped>
 #main-container {
-  height: calc(100% - 2rem);
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
   display: flex;
+  box-sizing: border-box;
   width: 100%;
-  max-width: calc(100% - 2rem);
+  height: 100%;
   padding: 1rem;
   align-items: center;
   flex-direction: row;
@@ -95,15 +95,5 @@ export default {
   display: flex;
   flex-direction: column;
   margin-left: 1rem;
-}
-
-#minimap,
-#charts {
-  flex: 1;
-  height: 100%;
-}
-
-#charts {
-  margin-top: 1rem;
 }
 </style>
