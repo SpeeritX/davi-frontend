@@ -14,17 +14,17 @@ const getData = async () => {
   });
   const parallel = response.data.data;
   var SPIDim = {
-    values: parallel.map((val) => val[3]),
+    values: parallel.map((val) => val[2]),
     label: "SPI",
   };
 
   var squawkDim = {
-    values: parallel.map((val) => val[4]),
+    values: parallel.map((val) => val[0]),
     label: "Squawk",
   };
 
   var ukraineDim = {
-    values: parallel.map((val) => val[5]),
+    values: parallel.map((val) => val[1]),
     label: "Ukraine",
   };
 
@@ -45,8 +45,7 @@ const getData = async () => {
     arrangement: "freeform",
   };
   var data = [trace1];
-  var layout = { margin: { l: 0, r: 0, t: 50, b: 20 } };
-  Plotly.newPlot("parallel-sets", data, layout);
+  Plotly.newPlot("parallel-sets", data, {}, { responsive: true });
 };
 
 onMounted(async () => {
@@ -57,6 +56,6 @@ onMounted(async () => {
 <style scoped>
 #parallel-sets {
   width: 100%;
-  height: 100%;
+  flex: 0.5;
 }
 </style>

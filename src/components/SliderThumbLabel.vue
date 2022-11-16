@@ -11,7 +11,7 @@
     </div>
   </div>
 </template>
-    
+
 <script>
 export default {
   name: "SliderThumbLabel",
@@ -36,7 +36,7 @@ export default {
   },
 };
 </script>
-    
+
 <style scoped>
 .thumb-label-container {
   position: absolute;
@@ -51,4 +51,3 @@ export default {
   border-radius: 4px;
 }
 </style>
-    

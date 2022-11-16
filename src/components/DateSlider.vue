@@ -49,8 +49,8 @@
     </div>
   </div>
 </template>
-  
-  <script>
+
+<script>
 import MultiRangeSlider from "multi-range-slider-vue";
 import HorizonChart from "./HorizonChart.vue";
 import MovableSelection from "./MovableSelection.vue";
@@ -94,7 +94,7 @@ export default {
   computed: {
     baseDate() {
       // +2 hours to fix issues with substracting dates with summer and winter time
-      return new Date(this.minDate + " 2:00:00");
+      return new Date(this.minDate + " 02:00:00");
     },
     maxSliderRange() {
       const value = this.dateStringToRawValue(this.maxDate);
@@ -163,7 +163,7 @@ export default {
   },
 };
 </script>
-  
+
 <style>
 @import "/node_modules/multi-range-slider-vue/MultiRangeSliderBarOnly.css";
 
@@ -239,4 +239,3 @@ export default {
   visibility: hidden;
 }
 </style>
-  
