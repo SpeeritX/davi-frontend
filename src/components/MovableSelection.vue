@@ -11,7 +11,7 @@
     />
   </div>
 </template>
-    
+
 <script>
 export default {
   name: "MovableSelection",
@@ -78,7 +78,7 @@ export default {
   },
 };
 </script>
-    
+
 <style scoped>
 .movable-selection-container {
   position: absolute;
@@ -90,4 +90,3 @@ export default {
   position: relative;
 }
 </style>
-    
