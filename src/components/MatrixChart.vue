@@ -42,9 +42,9 @@ onMounted(async () => {
           return `rgba(0,0,0,200)`;
         },
         width: ({ chart }) =>
-          (chart.chartArea || {}).width / Object.keys(matrixData).length + 3,
+          (chart.chartArea || {}).width / Object.keys(matrixData).length,
         height: ({ chart }) =>
-          (chart.chartArea || {}).height / Object.keys(matrixData).length + 3,
+          (chart.chartArea || {}).height / Object.keys(matrixData).length,
       },
     ],
   };
