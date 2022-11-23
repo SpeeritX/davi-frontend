@@ -19,7 +19,7 @@
     </div>
   </div>
 </template>
-        
+
 <script>
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 
@@ -71,7 +71,7 @@ export default {
   },
 };
 </script>
-        
+
 <style scoped>
 .filter {
   display: flex;
@@ -97,4 +97,3 @@ select {
   background-color: transparent;
 }
 </style>
-        

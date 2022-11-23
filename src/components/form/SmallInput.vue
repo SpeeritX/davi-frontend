@@ -37,8 +37,8 @@ export default {
   },
 };
 </script>
-        
-  <style scoped>
+
+<style scoped>
 input {
   width: 6rem;
 }
@@ -54,4 +54,3 @@ label {
   margin-bottom: 0.3rem;
 }
 </style>
-        

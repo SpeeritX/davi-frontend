@@ -4,7 +4,7 @@
     <input :id="id" :type="type" @input="inputChange" />
   </div>
 </template>
-      
+
 <script>
 export default {
   name: "DefaultInput",
@@ -37,7 +37,7 @@ export default {
   },
 };
 </script>
-      
+
 <style scoped>
 input {
   width: 100%;
@@ -54,4 +54,3 @@ label {
   margin: 2rem 0;
 }
 </style>
-      

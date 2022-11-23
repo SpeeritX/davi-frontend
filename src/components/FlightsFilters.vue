@@ -56,7 +56,7 @@
     <button @click="emitUpdateFilters">Apply</button>
   </div>
 </template>
-    
+
 <script>
 import DefaultInput from "./form/DefaultInput";
 import SmallInput from "./form/SmallInput";
@@ -105,7 +105,7 @@ export default {
   },
 };
 </script>
-    
+
 <style scoped>
 .filter {
   margin: 2rem 0;
@@ -119,4 +119,3 @@ export default {
   overflow-y: scroll;
 }
 </style>
-    
