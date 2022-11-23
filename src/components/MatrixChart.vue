@@ -51,7 +51,7 @@ onMounted(async () => {
   console.log(data);
   const options = {
     onClick: (e, e2) => {
-      console.log(data.datasets[0].data[e2[0].index]);
+      console.log(data.datasets[0].data[e2[0]?.index]);
     },
     aspectRatio: 1,
     plugins: {
