@@ -10,6 +10,10 @@
     "prettier:format": "./node_modules/.bin/prettier --write ."
   },
   "dependencies": {
+    "@fortawesome/fontawesome-svg-core": "^6.2.0",
+    "@fortawesome/free-regular-svg-icons": "^6.2.0",
+    "@fortawesome/free-solid-svg-icons": "^6.2.0",
+    "@fortawesome/vue-fontawesome": "^3.0.2",
     "axios": "^1.1.3",
     "chart.js": "^3.9.1",
     "chartjs-chart-matrix": "^1.2.0",

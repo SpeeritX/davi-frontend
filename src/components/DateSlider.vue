@@ -3,11 +3,23 @@
     <div class="timeline-controls">
       <div>
         <label for="minDate">Min Date</label>
-        <input type="date" id="minDate" v-model="minDatePicker" />
+        <input
+          type="date"
+          id="minDate"
+          v-model="minDatePicker"
+          :min="minDate"
+          :max="maxDate"
+        />
       </div>
       <div>
         <label for="maxDate">Max Date</label>
-        <input type="date" id="maxDate" v-model="maxDatePicker" />
+        <input
+          type="date"
+          id="maxDate"
+          v-model="maxDatePicker"
+          :min="minDate"
+          :max="maxDate"
+        />
       </div>
       <button @click="emitUpdateDates">Confirm</button>
     </div>
@@ -166,7 +178,6 @@ export default {
 
 <style>
 @import "/node_modules/multi-range-slider-vue/MultiRangeSliderBarOnly.css";
-
 .timeline-chart-container {
   padding-bottom: 0.1rem;
   margin-bottom: 1rem;

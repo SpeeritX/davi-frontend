@@ -1,7 +1,10 @@
 <template>
   <div id="main-container">
+    <FlightsFilters id="filters" />
     <div id="main-content">
-      <FlightsMap id="main-map" :flights="flights" />
+      <div id="fligths-container">
+        <FlightsMap id="flights-map" :flights="flights" />
+      </div>
       <DateSlider
         id="timeline"
         @update-dates="updateDates"
@@ -15,9 +18,9 @@
     </div>
   </div>
 </template>
-
 <script>
 import MatrixChart from "../components/MatrixChart.vue";
+import FlightsFilters from "../components/FlightsFilters.vue";
 import FlightsMap from "../components/FlightsMap.vue";
 import ParallelSets from "../components/ParallelSets.vue";
 import FlightsService from "../services/flightsService";
@@ -30,6 +33,7 @@ export default {
     FlightsMap,
     ParallelSets,
     DateSlider,
+    FlightsFilters,
   },
   data() {
     return {
@@ -60,7 +64,8 @@ export default {
 
 <style scoped>
 #main-container {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
+  height: calc(100% - 2rem);
+  font-family: Roboto, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
@@ -69,20 +74,30 @@ export default {
   box-sizing: border-box;
   width: 100%;
   height: 100%;
-  padding: 1rem;
   align-items: center;
   flex-direction: row;
 }
 
 #main-content {
   height: 100%;
-  flex: 2 0 0;
+  flex: 6 0 0;
   display: flex;
   flex-direction: column;
 }
 
-#main-map {
+#fligths-container {
   flex: 10 1 0;
+  display: flex;
+  flex-direction: row;
+}
+
+#filters {
+  flex: 1 1 0;
+  margin-right: 1rem;
+}
+
+#flights-map {
+  flex: 8 1 0;
 }
 
 #timeline {
@@ -91,7 +106,7 @@ export default {
 
 #sidebar {
   height: 100%;
-  flex: 1 0 0;
+  flex: 5 0 0;
   display: flex;
   flex-direction: column;
   margin-left: 1rem;
