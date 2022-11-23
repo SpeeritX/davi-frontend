@@ -24,7 +24,7 @@
     />
   </div>
 </template>
-    
+
 <script>
 import DefaultInput from "./form/DefaultInput";
 import SmallInput from "./form/SmallInput";
@@ -55,7 +55,7 @@ export default {
   methods: {},
 };
 </script>
-    
+
 <style scoped>
 .filter {
   margin: 2rem 0;
@@ -69,4 +69,3 @@ export default {
   overflow-y: scroll;
 }
 </style>
-    

@@ -4,8 +4,8 @@
     ><input :id="id" :type="type" />
   </div>
 </template>
-        
-  <script>
+
+<script>
 export default {
   name: "DefaultInput",
   components: {},
@@ -32,8 +32,8 @@ export default {
   methods: {},
 };
 </script>
-        
-  <style scoped>
+
+<style scoped>
 input {
   width: 6rem;
 }
@@ -49,4 +49,3 @@ label {
   margin-bottom: 0.3rem;
 }
 </style>
-        
