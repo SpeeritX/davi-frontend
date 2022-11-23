@@ -44,8 +44,11 @@ export default {
       }
     },
   },
+  data() {
+    return { chart: null };
+  },
   mounted() {
-    var chart = horizonChart()
+    this.chart = horizonChart()
       .height(this.height)
       .colors([
         "#313695",
@@ -62,12 +65,24 @@ export default {
       .enter()
       .append("div")
       .attr("class", "horizon")
-      .each(chart);
+      .each(this.chart);
     this.updateSize(this.width);
   },
   watch: {
     width(value) {
       this.updateSize(value);
+    },
+    data(value) {
+      console.log("data changed");
+      console.log(value);
+      select("#horizon-chart-container")
+        .selectAll(".horizon")
+        .data([value])
+        .enter()
+        .append("div")
+        .attr("class", "horizon")
+        .each(this.chart);
+      this.updateSize(this.width);
     },
   },
 };
@@ -83,6 +98,7 @@ export default {
   overflow: hidden;
   position: relative;
   width: fit-content;
+  background-color: #fee090;
 }
 
 .horizon + .horizon {

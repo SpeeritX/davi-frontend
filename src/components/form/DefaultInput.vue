@@ -1,7 +1,7 @@
 <template>
   <div class="filter">
     <label class="input-label">{{ label }}</label>
-    <input :id="id" :type="type" />
+    <input :id="id" :type="type" @input="inputChange" />
   </div>
 </template>
       
@@ -9,6 +9,7 @@
 export default {
   name: "DefaultInput",
   components: {},
+  emits: ["updateValue"],
   props: {
     id: {
       type: String,
@@ -29,7 +30,11 @@ export default {
   },
   mounted() {},
   computed: {},
-  methods: {},
+  methods: {
+    inputChange(e) {
+      this.$emit("updateValue", e.target.value);
+    },
+  },
 };
 </script>
       

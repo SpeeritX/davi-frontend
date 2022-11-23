@@ -42,9 +42,17 @@ export default {
       flights: [],
       minDate: "2022-02-22",
       maxDate: "2022-02-22",
-      filters: [],
+      filters: {},
       flightsCount: [],
     };
+  },
+  computed: {
+    queryDate() {
+      return {
+        date_1: this.minDate,
+        date_2: this.maxDate,
+      };
+    },
   },
   methods: {
     async updateDates(dates) {
@@ -54,18 +62,19 @@ export default {
     },
     async fetchFlights() {
       const response = await FlightsService.getFlights({
-        date_1: this.minDate,
-        date_2: this.maxDate,
+        ...this.queryDate,
+        ...this.filters,
       });
       this.flights = response.data;
     },
     async fetchFlightsCount() {
-      const response = await FlightsService.getFlightsCount();
+      const response = await FlightsService.getFlightsCount(this.filters);
       this.flightsCount = response.data;
     },
     async updateFilters(newFilters) {
       this.filters = newFilters;
       await this.fetchFlights();
+      await this.fetchFlightsCount();
     },
   },
   async mounted() {
