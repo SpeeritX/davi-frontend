@@ -4,7 +4,7 @@
     <input :id="id" :type="type" />
   </div>
 </template>
-      
+
 <script>
 export default {
   name: "DefaultInput",
@@ -32,7 +32,7 @@ export default {
   methods: {},
 };
 </script>
-      
+
 <style scoped>
 input {
   width: 100%;
@@ -49,4 +49,3 @@ label {
   margin: 2rem 0;
 }
 </style>
-      
