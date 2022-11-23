@@ -16,10 +16,11 @@ Chart.register(zoomPlugin);
 
 const matrixChart = ref(null);
 onMounted(async () => {
-  const response = await matrixService.getMatrix({
+  const response = await matrixService.getExpectedMatrix({
     date_1: "2022-02-22",
-    date_2: "2022-02-28",
+    date_2: "2022-02-22",
     origin_country: "Hungary",
+    expected: true,
   });
   const matrixData = response.data;
   const ctx = matrixChart.value.getContext("2d");
@@ -34,13 +35,11 @@ onMounted(async () => {
         ].flat(),
         backgroundColor(context) {
           const value = context.dataset.data[context.dataIndex].v;
-          const alpha = value / 150;
+          const alpha = value / 150 + 0;
           return `rgba(200,200,0,${alpha})`;
         },
-        borderColor(context) {
-          const value = context.dataset.data[context.dataIndex].v;
-          const alpha = value / 150;
-          return `rgba(0,0,0,${alpha})`;
+        borderColor() {
+          return `rgba(0,0,0,200)`;
         },
         width: ({ chart }) =>
           (chart.chartArea || {}).width / Object.keys(matrixData).length,
@@ -51,6 +50,9 @@ onMounted(async () => {
   };
   console.log(data);
   const options = {
+    onClick: (e, e2) => {
+      console.log(data.datasets[0].data[e2[0].index]);
+    },
     aspectRatio: 1,
     plugins: {
       legend: false,
@@ -77,7 +79,6 @@ onMounted(async () => {
       },
     },
   };
-  console.log(options);
   new Chart(ctx, {
     type: "matrix",
     data: data,

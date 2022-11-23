@@ -3,8 +3,8 @@
     <div id="horizon-chart-container"></div>
   </div>
 </template>
-  
-  <script>
+
+<script>
 import { horizonChart } from "d3-horizon-chart";
 import { select } from "d3-selection";
 
@@ -72,7 +72,7 @@ export default {
   },
 };
 </script>
-  
+
 <style>
 #horizon-chart-container {
   border: solid 1px #000;
@@ -114,4 +114,3 @@ export default {
   right: 0;
 }
 </style>
-  

@@ -5,8 +5,11 @@
 </template>
 
 <script>
+import mapService from "../services/mapService";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
+import stateData from "../assets/states.json";
+import grayscale from "../tools/TileLayer.Grayscale";
 
 export default {
   name: "FlightsMap",
@@ -32,17 +35,89 @@ export default {
       maxZoom: 11,
       minZoom: 6,
       maxBounds: [
-        [54, 41],
-        [40, 20],
+        [54, 40],
+        [41, 20],
       ],
       maxBoundsViscosity: 1,
     }).setView([50.45, 30.52], 6.3);
-    L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
-      maxZoom: 19,
-      attribution:
-        '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
-    }).addTo(this.map);
     this.layers = L.layerGroup();
+    const response = await mapService.getFlightPerRegion({
+      date_1: "2022-02-22",
+      date_2: "2022-06-22",
+    });
+    const matrixData = response.data;
+    grayscale(L);
+    L.tileLayer
+      .grayscale("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        maxZoom: 19,
+        noWrap: true,
+        maxBounds: [
+          [54, 40],
+          [41, 20],
+        ],
+        attribution:
+          '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+      })
+      .addTo(this.map);
+    this.layers = L.layerGroup();
+    function getColor(d) {
+      return d > 1000
+        ? "#800026"
+        : d > 500
+        ? "#BD0026"
+        : d > 200
+        ? "#E31A1C"
+        : d > 100
+        ? "#FC4E2A"
+        : d > 50
+        ? "#FD8D3C"
+        : d > 20
+        ? "#FEB24C"
+        : d > 10
+        ? "#FED976"
+        : d > 0
+        ? "#FFEDA0"
+        : "#FFFFFF";
+    }
+    function style(feature) {
+      return {
+        fillColor: getColor(matrixData[feature.properties.name]),
+        weight: 2,
+        opacity: 1,
+        color: "white",
+        dashArray: "3",
+        fillOpacity: 0.7,
+      };
+    }
+
+    function highlightFeature(e) {
+      const layer = e.target;
+
+      layer.setStyle({
+        weight: 5,
+        color: "#666",
+        dashArray: "",
+        fillOpacity: 0.7,
+      });
+      layer.bringToFront();
+    }
+
+    function resetHighlight(e) {
+      geojson.resetStyle(e.target);
+    }
+
+    function onEachFeature(feature, layer) {
+      layer.on({
+        mouseover: highlightFeature,
+        mouseout: resetHighlight,
+      });
+    }
+
+    let geojson;
+    geojson = L.geoJson(stateData, {
+      style: style,
+      onEachFeature: onEachFeature,
+    }).addTo(this.map);
   },
   async updated() {
     this.layers.removeFrom(this.map);
