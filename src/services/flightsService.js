@@ -10,6 +10,15 @@ class FlightsService {
       return [];
     }
   }
+  async getFlightsCount(params) {
+    try {
+      const response = await axios.get("/api/flights_count/", { params });
+      return response;
+    } catch (e) {
+      console.error(e);
+      return [];
+    }
+  }
 }
 
 export default new FlightsService();

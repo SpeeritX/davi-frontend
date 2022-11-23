@@ -1,15 +1,17 @@
 <template>
   <div id="main-container">
-    <FlightsFilters id="filters" />
+    <FlightsFilters id="filters" @update-filters="updateFilters" />
     <div id="main-content">
       <div id="fligths-container">
         <FlightsMap id="flights-map" :flights="flights" />
       </div>
       <DateSlider
+        v-if="flightsCount.length"
         id="timeline"
         @update-dates="updateDates"
         minDate="2022-02-22"
         maxDate="2022-06-18"
+        :flightsCount="flightsCount"
       />
     </div>
     <div id="sidebar">
@@ -40,6 +42,8 @@ export default {
       flights: [],
       minDate: "2022-02-22",
       maxDate: "2022-02-22",
+      filters: [],
+      flightsCount: [],
     };
   },
   methods: {
@@ -55,9 +59,18 @@ export default {
       });
       this.flights = response.data;
     },
+    async fetchFlightsCount() {
+      const response = await FlightsService.getFlightsCount();
+      this.flightsCount = response.data;
+    },
+    async updateFilters(newFilters) {
+      this.filters = newFilters;
+      await this.fetchFlights();
+    },
   },
   async mounted() {
     await this.fetchFlights();
+    await this.fetchFlightsCount();
   },
 };
 </script>

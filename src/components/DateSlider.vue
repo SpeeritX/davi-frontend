@@ -25,7 +25,7 @@
     </div>
     <div ref="timelineChartContainer" class="timeline-chart-container">
       <HorizonChart
-        :data="Array.from({ length: 117 }, (_, i) => Math.random() * i * 10)"
+        :data="flightsCount"
         :height="40"
         :width="width"
       ></HorizonChart>
@@ -85,6 +85,10 @@ export default {
       type: String,
       required: true,
     },
+    flightsCount: {
+      type: Array,
+      required: true,
+    },
   },
   emits: ["updateDates"],
   data() {
@@ -105,7 +109,7 @@ export default {
   },
   computed: {
     baseDate() {
-      // +2 hours to fix issues with substracting dates with summer and winter time
+      // +2 hours to fix issues with subtracting dates with summer and winter time
       return new Date(this.minDate + " 02:00:00");
     },
     maxSliderRange() {
