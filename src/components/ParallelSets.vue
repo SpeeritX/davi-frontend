@@ -1,17 +1,20 @@
 <template>
-  <div id="parallel-sets"></div>
+  <div class="parallel-container">
+    <div id="parallel-sets"></div>
+  </div>
 </template>
 
 <script setup>
 import Plotly from "plotly.js-dist";
-import { onMounted } from "vue";
+import { onMounted, defineProps } from "vue";
 import parallelService from "@/services/parallelService";
 
+const props = defineProps({
+  filters: Object,
+});
+
 const getData = async () => {
-  const response = await parallelService.getParallelSets({
-    date_1: "2022-02-22",
-    date_2: "2022-02-28",
-  });
+  const response = await parallelService.getParallelSets(props.filters);
   const parallel = response.data.data;
   var SPIDim = {
     values: parallel.map((val) => val[2]),
@@ -55,7 +58,11 @@ onMounted(async () => {
 
 <style scoped>
 #parallel-sets {
+  height: 100%;
   width: 100%;
-  flex: 0.5;
+}
+.parallel-container {
+  height: 100%;
+  width: 100%;
 }
 </style>

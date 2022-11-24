@@ -59,11 +59,8 @@ const styleRegion = (region) => {
 //   });
 // };
 
-const setUpRegionMap = async (stateData) => {
-  const response = await mapService.getFlightPerRegion({
-    date_1: "2022-02-22",
-    date_2: "2022-06-22",
-  });
+const updateRegionMap = async (filters, stateData) => {
+  const response = await mapService.getFlightPerRegion(filters);
   matrixData = response.data;
   geojson = L.geoJson(stateData, {
     style: (e) => styleRegion(e),
@@ -73,4 +70,4 @@ const setUpRegionMap = async (stateData) => {
   return geojson;
 };
 
-export default setUpRegionMap;
+export default updateRegionMap;
