@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <label>{{ label }}</label
-    ><input :id="id" :type="type" />
+    ><input :id="id" :type="type" @input="inputChange" />
   </div>
 </template>
 
@@ -29,7 +29,12 @@ export default {
   },
   mounted() {},
   computed: {},
-  methods: {},
+  methods: {
+    inputChange(e) {
+      console.log(e.target.value);
+      this.$emit("updateValue", e.target.value);
+    },
+  },
 };
 </script>
 

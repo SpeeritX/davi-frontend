@@ -3,15 +3,15 @@
     <FlightsFilters id="filters" @update-filters="updateFilters" />
     <div id="main-content">
       <div id="fligths-container">
-        <FlightsMap id="flights-map" :filters="filters" />
+        <FlightsMap id="flights-map" :filters="state.filters" />
       </div>
       <DateSlider
-        v-if="flightsCount.length"
+        v-if="state.flightsCount.length"
         id="timeline"
         @update-dates="updateDates"
         minDate="2022-02-22"
         maxDate="2022-06-18"
-        :flightsCount="flightsCount"
+        :flightsCount="state.flightsCount"
       />
     </div>
     <div id="sidebar">
@@ -39,31 +39,51 @@ export default {
   },
   data() {
     return {
-      filters: {
-        date_1: "2022-02-22",
-        date_2: "2022-02-22",
+      data: {
+        minDate: "2022-02-22",
+        maxDate: "2022-06-18",
       },
-      flightsCount: [],
+      state: {
+        filters: {
+          date_1: "2022-02-22",
+          date_2: "2022-02-22",
+        },
+        flightsCount: [],
+      },
     };
+  },
+  computed: {
+    queryDate() {
+      return {
+        date_1: this.state.selectedMinDate,
+        date_2: this.state.selectedMaxDate,
+      };
+    },
   },
   methods: {
     async updateDates(dates) {
-      this.filters = {
+      this.state.filters = {
         date_1: dates.minDate,
         date_2: dates.maxDate,
-        ...this.filters,
+        ...this.state.filters,
       };
     },
     async fetchFlightsCount() {
-      const response = await FlightsService.getFlightsCount();
-      this.flightsCount = response.data;
+      const response = await FlightsService.getFlightsCount({
+        date_1: this.data.minDate,
+        date_2: this.data.maxDate,
+        ...this.state.filters,
+      });
+      this.state.flightsCount = response.data.data.flat();
     },
     async updateFilters(newFilters) {
-      this.filters = {
-        date_1: this.filters.minDate,
-        date_2: this.filters.maxDate,
+      this.state.filters = {
+        date_1: this.state.filters.minDate,
+        date_2: this.state.filters.maxDate,
         ...newFilters,
       };
+      await this.fetchFlights();
+      await this.fetchFlightsCount();
     },
   },
   async mounted() {
