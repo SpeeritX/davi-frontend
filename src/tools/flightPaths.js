@@ -1,4 +1,10 @@
 import L from "leaflet";
+import FlightsService from "../services/flightsService";
+
+const fetchFlights = async (filters) => {
+  const response = await FlightsService.getFlights(filters);
+  return response.data;
+};
 
 const splitFlightLine = (path) => {
   const distance = (point1, point2) => {
@@ -18,7 +24,8 @@ const splitFlightLine = (path) => {
   return splittedPaths;
 };
 
-const updateFlightPaths = (flights) => {
+const updateFlightPaths = async (filters) => {
+  const flights = await fetchFlights(filters);
   const layers = L.layerGroup([], { pane: "flights" });
 
   // const sliceWithStep = (data, step) => {

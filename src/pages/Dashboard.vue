@@ -3,7 +3,7 @@
     <FlightsFilters id="filters" @update-filters="updateFilters" />
     <div id="main-content">
       <div id="fligths-container">
-        <FlightsMap id="flights-map" :flights="state.flights" />
+        <FlightsMap id="flights-map" :filters="state.filters" />
       </div>
       <DateSlider
         v-if="state.flightsCount.length"
@@ -15,8 +15,8 @@
       />
     </div>
     <div id="sidebar">
-      <MatrixChart />
-      <ParallelSets />
+      <MatrixChart id="matrix" :filters="state.filters" />
+      <ParallelSets id="parallel" :filters="state.filters" />
     </div>
   </div>
 </template>
@@ -44,10 +44,10 @@ export default {
         maxDate: "2022-06-18",
       },
       state: {
-        flights: [],
-        selectedMinDate: "2022-02-22",
-        selectedMaxDate: "2022-02-22",
-        filters: {},
+        filters: {
+          date_1: "2022-02-22",
+          date_2: "2022-02-22",
+        },
         flightsCount: [],
       },
     };
@@ -62,33 +62,30 @@ export default {
   },
   methods: {
     async updateDates(dates) {
-      this.state.selectedMinDate = dates.minDate;
-      this.state.selectedMaxDate = dates.maxDate;
-      await this.fetchFlights();
-    },
-    async fetchFlights() {
-      const response = await FlightsService.getFlights({
-        ...this.queryDate,
+      this.state.filters = {
         ...this.state.filters,
-      });
-      this.state.flights = response.data;
+        date_1: dates.minDate,
+        date_2: dates.maxDate,
+      };
     },
     async fetchFlightsCount() {
       const response = await FlightsService.getFlightsCount({
+        ...this.state.filters,
         date_1: this.data.minDate,
         date_2: this.data.maxDate,
-        ...this.state.filters,
       });
       this.state.flightsCount = response.data.data.flat();
     },
     async updateFilters(newFilters) {
-      this.state.filters = newFilters;
-      await this.fetchFlights();
+      this.state.filters = {
+        date_1: this.state.filters.minDate,
+        date_2: this.state.filters.maxDate,
+        ...newFilters,
+      };
       await this.fetchFlightsCount();
     },
   },
   async mounted() {
-    await this.fetchFlights();
     await this.fetchFlightsCount();
   },
 };
@@ -96,18 +93,17 @@ export default {
 
 <style scoped>
 #main-container {
-  height: calc(100% - 2rem);
   font-family: Roboto, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
   display: flex;
-  box-sizing: border-box;
   width: 100%;
   height: 100%;
   align-items: center;
   flex-direction: row;
+  overflow: hidden;
 }
 
 #main-content {
@@ -138,9 +134,15 @@ export default {
 
 #sidebar {
   height: 100%;
-  flex: 5 0 0;
+  flex: 3 0 0;
   display: flex;
   flex-direction: column;
   margin-left: 1rem;
+}
+#matrix {
+  flex: 3 0 0;
+}
+#parallel {
+  flex: 3 0 0;
 }
 </style>

@@ -114,6 +114,7 @@ export default {
 .filters-container {
   height: 100%;
   padding: 1rem;
+  box-sizing: border-box;
   background-color: #f8f8f8;
   box-shadow: 0px 0px 6px rgb(153, 153, 153);
   overflow-y: scroll;

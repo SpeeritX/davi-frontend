@@ -3,7 +3,7 @@
     <div
       class="thumb-label thumb-label-left"
       v-bind:style="{
-        'margin-left': `${position + offsetX}px`,
+        left: `${position + offsetX}px`,
         top: `${offsetY}px`,
       }"
     >

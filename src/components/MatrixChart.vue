@@ -6,7 +6,7 @@
 
 <script setup>
 import Chart from "chart.js/auto";
-import { ref, onMounted } from "vue";
+import { ref, onMounted, defineProps, onUpdated } from "vue";
 import { MatrixController, MatrixElement } from "chartjs-chart-matrix";
 import zoomPlugin from "chartjs-plugin-zoom";
 import matrixService from "@/services/matrixService";
@@ -14,16 +14,16 @@ import matrixService from "@/services/matrixService";
 Chart.register(MatrixController, MatrixElement);
 Chart.register(zoomPlugin);
 
+const props = defineProps({
+  filters: Object,
+});
+
+let chart;
+
 const matrixChart = ref(null);
-onMounted(async () => {
-  const response = await matrixService.getExpectedMatrix({
-    date_1: "2022-02-22",
-    date_2: "2022-02-22",
-    origin_country: "Hungary",
-    expected: true,
-  });
+const fillMatrix = async () => {
+  const response = await matrixService.getExpectedMatrix(props.filters);
   const matrixData = response.data;
-  const ctx = matrixChart.value.getContext("2d");
   const data = {
     datasets: [
       {
@@ -42,13 +42,16 @@ onMounted(async () => {
           return `rgba(0,0,0,200)`;
         },
         width: ({ chart }) =>
-          (chart.chartArea || {}).width / Object.keys(matrixData).length,
+          (chart.chartArea || {}).width / Object.keys(matrixData).length + 1,
         height: ({ chart }) =>
-          (chart.chartArea || {}).height / Object.keys(matrixData).length,
+          (chart.chartArea || {}).height / Object.keys(matrixData).length + 1,
       },
     ],
   };
-  console.log(data);
+  return data;
+};
+onMounted(async () => {
+  const ctx = matrixChart.value.getContext("2d");
   const options = {
     onClick: (e, e2) => {
       console.log(data.datasets[0].data[e2[0]?.index]);
@@ -79,11 +82,17 @@ onMounted(async () => {
       },
     },
   };
-  new Chart(ctx, {
+  const data = await fillMatrix();
+  chart = new Chart(ctx, {
     type: "matrix",
     data: data,
     options: options,
   });
+});
+onUpdated(async () => {
+  const data = await fillMatrix();
+  chart.data = data;
+  chart?.update();
 });
 </script>
 
@@ -91,9 +100,6 @@ onMounted(async () => {
 .matrix-chart {
   aspect-ratio: 1 / 1;
   width: 100%;
-}
-div {
-  height: 100%;
-  flex: 1;
+  border: 1px black solid;
 }
 </style>
