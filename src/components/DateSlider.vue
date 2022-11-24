@@ -40,8 +40,8 @@
       />
       <SliderThumbLabel
         :position="leftLabelPosition"
-        :offsetX="-5"
-        :offsetY="4"
+        :offsetX="-98"
+        :offsetY="-17"
         :text="minDatePicker"
       />
       <SliderThumbLabel

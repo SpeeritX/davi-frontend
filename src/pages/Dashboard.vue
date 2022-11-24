@@ -3,7 +3,7 @@
     <FlightsFilters id="filters" @update-filters="updateFilters" />
     <div id="main-content">
       <div id="fligths-container">
-        <FlightsMap id="flights-map" :flights="flights" />
+        <FlightsMap id="flights-map" :filters="filters" />
       </div>
       <DateSlider
         v-if="flightsCount.length"
@@ -15,8 +15,8 @@
       />
     </div>
     <div id="sidebar">
-      <MatrixChart />
-      <ParallelSets />
+      <MatrixChart id="matrix" :filters="filters" />
+      <ParallelSets id="parallel" :filters="filters" />
     </div>
   </div>
 </template>
@@ -39,37 +39,34 @@ export default {
   },
   data() {
     return {
-      flights: [],
-      minDate: "2022-02-22",
-      maxDate: "2022-02-22",
-      filters: [],
+      filters: {
+        date_1: "2022-02-22",
+        date_2: "2022-02-22",
+      },
       flightsCount: [],
     };
   },
   methods: {
     async updateDates(dates) {
-      this.minDate = dates.minDate;
-      this.maxDate = dates.maxDate;
-      await this.fetchFlights();
-    },
-    async fetchFlights() {
-      const response = await FlightsService.getFlights({
-        date_1: this.minDate,
-        date_2: this.maxDate,
-      });
-      this.flights = response.data;
+      this.filters = {
+        date_1: dates.minDate,
+        date_2: dates.maxDate,
+        ...this.filters,
+      };
     },
     async fetchFlightsCount() {
       const response = await FlightsService.getFlightsCount();
       this.flightsCount = response.data;
     },
     async updateFilters(newFilters) {
-      this.filters = newFilters;
-      await this.fetchFlights();
+      this.filters = {
+        date_1: this.filters.minDate,
+        date_2: this.filters.maxDate,
+        ...newFilters,
+      };
     },
   },
   async mounted() {
-    await this.fetchFlights();
     await this.fetchFlightsCount();
   },
 };
@@ -77,18 +74,17 @@ export default {
 
 <style scoped>
 #main-container {
-  height: calc(100% - 2rem);
   font-family: Roboto, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
   display: flex;
-  box-sizing: border-box;
   width: 100%;
   height: 100%;
   align-items: center;
   flex-direction: row;
+  overflow: hidden;
 }
 
 #main-content {
@@ -119,9 +115,15 @@ export default {
 
 #sidebar {
   height: 100%;
-  flex: 5 0 0;
+  flex: 3 0 0;
   display: flex;
   flex-direction: column;
   margin-left: 1rem;
+}
+#matrix {
+  flex: 3 0 0;
+}
+#parallel {
+  flex: 3 0 0;
 }
 </style>

@@ -82,6 +82,8 @@ export default {
 <style scoped>
 .movable-selection-container {
   position: absolute;
+  height: 0;
+  width: 0;
 }
 
 .movable-selection {
