@@ -1,9 +1,17 @@
 <template>
   <div id="main-container">
-    <FlightsFilters id="filters" @update-filters="updateFilters" />
+    <FlightsFilters
+      id="filters"
+      @update-filters="updateFilters"
+      @update-shortest-paths="(val) => (this.state.shortestPaths = val)"
+    />
     <div id="main-content">
       <div id="fligths-container">
-        <FlightsMap id="flights-map" :filters="state.filters" />
+        <FlightsMap
+          id="flights-map"
+          :filters="state.filters"
+          :shortestPaths="state.shortestPaths"
+        />
       </div>
       <DateSlider
         v-if="state.flightsCount.length"
@@ -49,6 +57,7 @@ export default {
           date_2: "2022-02-22",
         },
         flightsCount: [],
+        shortestPaths: false,
       },
     };
   },
@@ -134,7 +143,7 @@ export default {
 
 #sidebar {
   height: 100%;
-  flex: 3 0 0;
+  flex: 4 0 0;
   display: flex;
   flex-direction: column;
   margin-left: 1rem;

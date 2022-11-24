@@ -2,43 +2,51 @@
   <div class="filters-container">
     <h2>DaVi - Flights in Ukraine</h2>
     <div class="filter">
-      <p class="input-label">Velocity (m/s)</p>
+      <p class="input-label">Velocity (kn)</p>
       <SmallInput
         id="velocityMin"
         label="Min"
         type="number"
-        v-model="state.altitudeMin"
+        :min="velocityMin"
+        :max="velocityMax"
+        :value="state.velocityMin"
         @update-value="(value) => updateFilter('velocityMin', value)"
       />
       <SmallInput
         id="velocityMax"
         label="Max"
         type="number"
-        v-model="state.altitudeMax"
+        :min="velocityMin"
+        :max="velocityMax"
+        :value="state.velocityMax"
         @update-value="(value) => updateFilter('velocityMax', value)"
       />
     </div>
     <div class="filter">
-      <p class="input-label">Altitude (m)</p>
+      <p class="input-label">Barometric altitude (ft)</p>
       <SmallInput
         id="altitudeMin"
         label="Min"
         type="number"
-        v-model="state.altitudeMin"
+        :min="altitudeMin"
+        :max="altitudeMax"
+        :value="state.altitudeMin"
         @update-value="(value) => updateFilter('altitudeMin', value)"
       />
       <SmallInput
         id="altitudeMax"
         label="Max"
         type="number"
-        v-model="state.altitudeMax"
+        :min="altitudeMin"
+        :max="altitudeMax"
+        :value="state.altitudeMax"
         @update-value="(value) => updateFilter('altitudeMax', value)"
       />
     </div>
     <DefaultInput
       id="squawk"
       label="Squawk"
-      v-model="state.squawk"
+      :value="state.squawk"
       @update-value="(value) => updateFilter('squawk', value)"
     />
     <MultiSelectInput
@@ -53,6 +61,14 @@
       :options="data.originCountryOptions"
       @update-value="(value) => updateFilter('originCountry', value)"
     />
+    <div class="filter">
+      <p class="input-label">Additional options</p>
+      <CheckboxInput
+        id="shortestPaths"
+        @update-value="(value) => updateFilter('shortestPaths', value)"
+        label="Show the shortest connections between the start and end points of flights"
+      />
+    </div>
     <button @click="emitUpdateFilters" class="apply-button">Apply</button>
   </div>
 </template>
@@ -61,32 +77,42 @@
 import DefaultInput from "./form/DefaultInput";
 import SmallInput from "./form/SmallInput";
 import MultiSelectInput from "./form/MultiSelectInput";
+import CheckboxInput from "./form/CheckboxInput";
 export default {
   name: "FlightsFilters",
-  components: { DefaultInput, MultiSelectInput, SmallInput },
+  components: { DefaultInput, MultiSelectInput, SmallInput, CheckboxInput },
   props: {},
-  emits: ["updateFilters"],
+  emits: ["updateFilters", "updateShortestPaths"],
   data() {
     return {
       data: {
+        velocityMin: 0,
+        velocityMax: 2062,
+        altitudeMin: -137,
+        altitudeMax: 38618,
         currentCountryOptions: ["Ukraine", "Russia", "Poland"],
         originCountryOptions: ["Ukraine", "Russia", "Poland"],
       },
       state: {
-        velocityMax: null,
-        velocityMin: null,
-        altitudeMax: null,
-        altitudeMin: null,
+        velocityMin: 0,
+        velocityMax: 2062,
+        altitudeMin: -137,
+        altitudeMax: 38618,
         squawk: null,
         currentCountry: null,
         originCountry: null,
+        shortestPaths: false,
       },
+      filtersModified: false,
     };
   },
   mounted() {},
   computed: {},
   methods: {
     updateFilter(filter, newValue) {
+      if (filter != "shortestPaths") {
+        this.filtersModified = true;
+      }
       this.state[filter] = newValue;
     },
     emitUpdateFilters() {
@@ -94,13 +120,17 @@ export default {
         str.replace(/[A-Z]/g, (letter) => `_${letter.toLowerCase()}`);
       let query = {};
       Object.keys(this.state).forEach((key) => {
-        if (this.state[key] !== null) {
+        if (key != "shortestPaths" && this.state[key] !== null) {
           const param = camelToSnakeCase(key);
           query[param] = this.state[key];
         }
       });
       console.log(query);
-      this.$emit("updateFilters", query);
+      this.$emit("updateShortestPaths", this.state.shortestPaths);
+      if (this.filtersModified) {
+        this.$emit("updateFilters", query);
+      }
+      this.filtersModified = false;
     },
   },
 };
@@ -108,7 +138,8 @@ export default {
 
 <style scoped>
 .filter {
-  margin: 2rem 0;
+  margin: 1.6rem 0;
+  text-align: left;
 }
 
 .filters-container {

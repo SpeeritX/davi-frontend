@@ -1,5 +1,5 @@
 <template>
-  <div class="filter">
+  <div class="container">
     <label class="input-label">{{ label }}</label>
     <input :id="id" :type="type" @input="inputChange" />
   </div>
@@ -46,7 +46,7 @@ input {
 label {
   margin-right: 0.5rem;
 }
-.filter {
+.container {
   display: flex;
   flex-direction: column;
   justify-content: space-between;

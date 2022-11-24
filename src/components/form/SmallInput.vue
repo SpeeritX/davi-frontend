@@ -1,7 +1,14 @@
 <template>
   <div class="container">
     <label>{{ label }}</label
-    ><input :id="id" :type="type" @input="inputChange" />
+    ><input
+      :id="id"
+      :type="type"
+      @input="inputChange"
+      :min="min"
+      :max="max"
+      :value="value"
+    />
   </div>
 </template>
 
@@ -9,7 +16,22 @@
 export default {
   name: "DefaultInput",
   components: {},
+  emits: ["updateValue"],
   props: {
+    value: {
+      type: Number,
+      required: true,
+    },
+    min: {
+      type: Number,
+      required: false,
+      default: 0,
+    },
+    max: {
+      type: Number,
+      required: false,
+      default: 10000000000,
+    },
     id: {
       type: String,
       required: true,
@@ -40,7 +62,7 @@ export default {
 
 <style scoped>
 input {
-  width: 4rem;
+  width: 5rem;
 }
 
 label {

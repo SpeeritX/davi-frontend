@@ -1,5 +1,5 @@
 <template>
-  <div class="filter">
+  <div class="container">
     <label class="input-label">{{ label }}</label>
     <select :id="id" v-model="value" @input="chooseOption">
       <option disabled selected>Choose</option>
@@ -73,7 +73,7 @@ export default {
 </script>
 
 <style scoped>
-.filter {
+.container {
   display: flex;
   flex-direction: column;
   justify-content: space-between;

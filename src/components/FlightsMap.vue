@@ -16,11 +16,12 @@ import setCountryMap from "../tools/countryMap";
 
 export default {
   name: "FlightsMap",
-  props: ["filters"],
+  props: ["filters", "shortestPaths"],
   data() {
     return {
       map: null,
-      layersToUpdate: null,
+      flightsLayers: null,
+      regionLayers: null,
     };
   },
   async mounted() {
@@ -62,16 +63,34 @@ export default {
     this.map.getPane("regions").style.zIndex = 900;
     this.map.createPane("countries");
     this.map.getPane("countries").style.zIndex = 910;
-    this.layersToUpdate = L.layerGroup();
-    this.layersToUpdate.addTo(this.map);
+    this.flightsLayers = L.layerGroup();
+    this.regionLayers = L.layerGroup();
+    this.flightsLayers.addTo(this.map);
+    this.regionLayers.addTo(this.map);
     setCountryMap(countryData).addTo(this.map);
-    (await updateFlightPaths(this.filters)).addTo(this.layersToUpdate);
-    (await updateRegionMap(this.filters, stateData)).addTo(this.layersToUpdate);
+    await this.updateRegions();
+    await this.updateFlights();
   },
-  async updated() {
-    this.layersToUpdate.clearLayers();
-    (await updateFlightPaths(this.filters)).addTo(this.layersToUpdate);
-    (await updateRegionMap(this.filters, stateData)).addTo(this.layersToUpdate);
+  watch: {
+    async shortestPaths() {
+      await this.updateFlights();
+    },
+    async filters() {
+      await this.updateRegions();
+      await this.updateFlights();
+    },
+  },
+  methods: {
+    async updateFlights() {
+      this.flightsLayers.clearLayers();
+      (await updateFlightPaths(this.filters, this.shortestPaths)).addTo(
+        this.flightsLayers
+      );
+    },
+    async updateRegions() {
+      this.regionLayers.clearLayers();
+      (await updateRegionMap(this.filters, stateData)).addTo(this.regionLayers);
+    },
   },
 };
 </script>
