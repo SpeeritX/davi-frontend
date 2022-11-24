@@ -1,8 +1,8 @@
 <template>
   <div class="filters-container">
-    <h2>Filters</h2>
+    <h2>DaVi - Flights in Ukraine</h2>
     <div class="filter">
-      <p class="input-label">Altitude</p>
+      <p class="input-label">Velocity (m/s)</p>
       <SmallInput
         id="velocityMin"
         label="Min"
@@ -19,7 +19,7 @@
       />
     </div>
     <div class="filter">
-      <p class="input-label">Altitude</p>
+      <p class="input-label">Altitude (m)</p>
       <SmallInput
         id="altitudeMin"
         label="Min"
@@ -53,7 +53,7 @@
       :options="data.originCountryOptions"
       @update-value="(value) => updateFilter('originCountry', value)"
     />
-    <button @click="emitUpdateFilters">Apply</button>
+    <button @click="emitUpdateFilters" class="apply-button">Apply</button>
   </div>
 </template>
 
@@ -117,5 +117,8 @@ export default {
   background-color: #f8f8f8;
   box-shadow: 0px 0px 6px rgb(153, 153, 153);
   overflow-y: scroll;
+}
+.apply-button {
+  width: 100%;
 }
 </style>

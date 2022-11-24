@@ -84,12 +84,12 @@ select {
   width: 100%;
 }
 .chosen-value {
-  border: 1px solid lightgray;
+  font-size: 0.8rem;
   border-radius: 4px;
   margin-top: 0.2rem;
-  padding: 0.2rem;
+  padding: 0 0 0 0.3rem;
   background-color: white;
-  font-size: 0.9rem;
+  border: 1px solid lightgray;
 }
 .chosen-value button {
   border: none;

@@ -40,11 +40,12 @@ export default {
 
 <style scoped>
 input {
-  width: 6rem;
+  width: 4rem;
 }
 
 label {
   margin-right: 0.5rem;
+  font-size: 0.9rem;
 }
 .container {
   display: flex;

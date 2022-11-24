@@ -24,7 +24,6 @@ select {
   box-shadow: none;
   border: 1px solid lightgray;
   background-color: white;
-  font-size: 0.9rem;
 }
 
 input:focus,
@@ -33,13 +32,31 @@ input:focus-visible {
 }
 .input-label {
   font-size: 1rem;
-  font-weight: 600;
   color: #4e64a0;
   margin: 0.5rem 0;
   text-align: left;
 }
+button,
+button:active {
+  background-color: #4e64a0;
+  color: white;
+  border-radius: 4px;
+  outline: none;
+  box-shadow: none;
+  border: none;
+  padding: 0.3rem 0.4rem;
+}
+button:hover {
+  opacity: 0.95;
+  box-shadow: 0 0 3px gray;
+  cursor: pointer;
+}
+button svg {
+  color: black;
+}
 h2 {
   color: #4e64a0;
+  font-weight: 400;
   width: 100%;
   padding-bottom: 0.5rem;
   border-bottom: 1px solid #dadada;
