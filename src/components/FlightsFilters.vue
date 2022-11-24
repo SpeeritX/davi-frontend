@@ -7,8 +7,8 @@
         id="velocityMin"
         label="Min"
         type="number"
-        :min="velocityMin"
-        :max="velocityMax"
+        :min="data.velocityMin"
+        :max="data.velocityMax"
         :value="state.velocityMin"
         @update-value="(value) => updateFilter('velocityMin', value)"
       />
@@ -16,8 +16,8 @@
         id="velocityMax"
         label="Max"
         type="number"
-        :min="velocityMin"
-        :max="velocityMax"
+        :min="data.velocityMin"
+        :max="data.velocityMax"
         :value="state.velocityMax"
         @update-value="(value) => updateFilter('velocityMax', value)"
       />
@@ -28,8 +28,8 @@
         id="altitudeMin"
         label="Min"
         type="number"
-        :min="altitudeMin"
-        :max="altitudeMax"
+        :min="data.altitudeMin"
+        :max="data.altitudeMax"
         :value="state.altitudeMin"
         @update-value="(value) => updateFilter('altitudeMin', value)"
       />
@@ -37,16 +37,16 @@
         id="altitudeMax"
         label="Max"
         type="number"
-        :min="altitudeMin"
-        :max="altitudeMax"
+        :min="data.altitudeMin"
+        :max="data.altitudeMax"
         :value="state.altitudeMax"
         @update-value="(value) => updateFilter('altitudeMax', value)"
       />
     </div>
-    <DefaultInput
+    <SelectInput
       id="squawk"
       label="Squawk"
-      :value="state.squawk"
+      :options="data.squawkOptions"
       @update-value="(value) => updateFilter('squawk', value)"
     />
     <MultiSelectInput
@@ -74,13 +74,18 @@
 </template>
 
 <script>
-import DefaultInput from "./form/DefaultInput";
 import SmallInput from "./form/SmallInput";
 import MultiSelectInput from "./form/MultiSelectInput";
+import SelectInput from "./form/SelectInput";
 import CheckboxInput from "./form/CheckboxInput";
 export default {
   name: "FlightsFilters",
-  components: { DefaultInput, MultiSelectInput, SmallInput, CheckboxInput },
+  components: {
+    MultiSelectInput,
+    SelectInput,
+    SmallInput,
+    CheckboxInput,
+  },
   props: {},
   emits: ["updateFilters", "updateShortestPaths"],
   data() {
@@ -92,6 +97,7 @@ export default {
         altitudeMax: 38618,
         currentCountryOptions: ["Ukraine", "Russia", "Poland"],
         originCountryOptions: ["Ukraine", "Russia", "Poland"],
+        squawkOptions: ["other", "7500", "7700"],
       },
       state: {
         velocityMin: 0,
