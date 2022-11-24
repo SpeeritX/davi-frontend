@@ -78,9 +78,9 @@ export default {
     },
     async updateFilters(newFilters) {
       this.state.filters = {
-        date_1: this.state.filters.minDate,
-        date_2: this.state.filters.maxDate,
         ...newFilters,
+        date_1: this.state.filters.date_1,
+        date_2: this.state.filters.date_2,
       };
       await this.fetchFlightsCount();
     },
