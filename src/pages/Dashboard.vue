@@ -15,8 +15,8 @@
       />
     </div>
     <div id="sidebar">
-      <MatrixChart id="matrix" :filters="filters" />
-      <ParallelSets id="parallel" :filters="filters" />
+      <MatrixChart id="matrix" :filters="state.filters" />
+      <ParallelSets id="parallel" :filters="state.filters" />
     </div>
   </div>
 </template>
@@ -63,16 +63,16 @@ export default {
   methods: {
     async updateDates(dates) {
       this.state.filters = {
+        ...this.state.filters,
         date_1: dates.minDate,
         date_2: dates.maxDate,
-        ...this.state.filters,
       };
     },
     async fetchFlightsCount() {
       const response = await FlightsService.getFlightsCount({
+        ...this.state.filters,
         date_1: this.data.minDate,
         date_2: this.data.maxDate,
-        ...this.state.filters,
       });
       this.state.flightsCount = response.data.data.flat();
     },
@@ -82,7 +82,6 @@ export default {
         date_2: this.state.filters.maxDate,
         ...newFilters,
       };
-      await this.fetchFlights();
       await this.fetchFlightsCount();
     },
   },
