@@ -3,15 +3,15 @@
     <FlightsFilters id="filters" @update-filters="updateFilters" />
     <div id="main-content">
       <div id="fligths-container">
-        <FlightsMap id="flights-map" :flights="flights" />
+        <FlightsMap id="flights-map" :flights="state.flights" />
       </div>
       <DateSlider
-        v-if="flightsCount.length"
+        v-if="state.flightsCount.length"
         id="timeline"
         @update-dates="updateDates"
         minDate="2022-02-22"
         maxDate="2022-06-18"
-        :flightsCount="flightsCount"
+        :flightsCount="state.flightsCount"
       />
     </div>
     <div id="sidebar">
@@ -39,40 +39,50 @@ export default {
   },
   data() {
     return {
-      flights: [],
-      minDate: "2022-02-22",
-      maxDate: "2022-02-22",
-      filters: {},
-      flightsCount: [],
+      data: {
+        minDate: "2022-02-22",
+        maxDate: "2022-06-18",
+      },
+      state: {
+        flights: [],
+        selectedMinDate: "2022-02-22",
+        selectedMaxDate: "2022-02-22",
+        filters: {},
+        flightsCount: [],
+      },
     };
   },
   computed: {
     queryDate() {
       return {
-        date_1: this.minDate,
-        date_2: this.maxDate,
+        date_1: this.state.selectedMinDate,
+        date_2: this.state.selectedMaxDate,
       };
     },
   },
   methods: {
     async updateDates(dates) {
-      this.minDate = dates.minDate;
-      this.maxDate = dates.maxDate;
+      this.state.selectedMinDate = dates.minDate;
+      this.state.selectedMaxDate = dates.maxDate;
       await this.fetchFlights();
     },
     async fetchFlights() {
       const response = await FlightsService.getFlights({
         ...this.queryDate,
-        ...this.filters,
+        ...this.state.filters,
       });
-      this.flights = response.data;
+      this.state.flights = response.data;
     },
     async fetchFlightsCount() {
-      const response = await FlightsService.getFlightsCount(this.filters);
-      this.flightsCount = response.data;
+      const response = await FlightsService.getFlightsCount({
+        date_1: this.data.minDate,
+        date_2: this.data.maxDate,
+        ...this.state.filters,
+      });
+      this.state.flightsCount = response.data.data.flat();
     },
     async updateFilters(newFilters) {
-      this.filters = newFilters;
+      this.state.filters = newFilters;
       await this.fetchFlights();
       await this.fetchFlightsCount();
     },

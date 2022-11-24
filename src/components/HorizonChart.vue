@@ -25,6 +25,9 @@ export default {
       required: true,
     },
   },
+  data() {
+    return { chart: null };
+  },
   computed: {
     numberOfDataPoints() {
       return this.data.length;
@@ -43,9 +46,6 @@ export default {
           .style("margin-left", `${leftMargin}px`);
       }
     },
-  },
-  data() {
-    return { chart: null };
   },
   mounted() {
     this.chart = horizonChart()
@@ -72,11 +72,11 @@ export default {
     width(value) {
       this.updateSize(value);
     },
-    data(value) {
-      console.log("data changed");
-      console.log(value);
+    async data(value) {
+      select("#horizon-chart-container").selectAll(".horizon").remove();
       select("#horizon-chart-container")
         .selectAll(".horizon")
+        .remove()
         .data([value])
         .enter()
         .append("div")
