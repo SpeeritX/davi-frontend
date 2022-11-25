@@ -25,6 +25,7 @@
     </div>
     <div ref="timelineChartContainer" class="timeline-chart-container">
       <HorizonChart
+        id="flightsHorizonChart"
         :data="flightsCount"
         :height="40"
         :width="width"
@@ -58,6 +59,23 @@
         :sliderWidth="width"
         @update-value="moveSlider"
       />
+    </div>
+    <div class="legend-container">
+      <div>
+        <span>Number of flights</span>
+        <HorizonChart
+          id="legend-horizon-chart"
+          :data="Array.from({ length: 200 }, (_, i) => i)"
+          :height="20"
+          :width="200"
+        ></HorizonChart>
+        <div class="legend-values">
+          <span>0</span>
+          <span>{{ maxFlightsCount / 3 }}</span>
+          <span>{{ (maxFlightsCount * 2) / 3 }}</span>
+          <span>{{ maxFlightsCount }}</span>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -129,6 +147,9 @@ export default {
     leftLabelPosition() {
       return (this.width / this.maxSliderRange) * this.rawMinValue;
     },
+    maxFlightsCount() {
+      return Math.max(...this.flightsCount);
+    },
   },
   methods: {
     updateRawValues(e) {
@@ -184,7 +205,6 @@ export default {
 @import "/node_modules/multi-range-slider-vue/MultiRangeSliderBarOnly.css";
 .timeline-chart-container {
   padding-bottom: 0.1rem;
-  margin-bottom: 1rem;
 }
 
 .timeline-controls {
@@ -227,10 +247,12 @@ export default {
 
 .multi-range-slider-bar-only .bar-left {
   border-radius: 4px 0 0 4px;
+  box-shadow: none;
 }
 
 .multi-range-slider-bar-only .bar-right {
   border-radius: 0 4px 4px 0;
+  box-shadow: none;
 }
 
 .multi-range-slider-bar-only .bar-inner {
@@ -242,15 +264,37 @@ export default {
 
 .multi-range-slider-bar-only .thumb::before {
   top: 45px;
-  background-color: white;
+  background-color: #4e64a0;
   margin: -6px;
   width: 12px;
   border-radius: 4px;
-  box-shadow: inset 0px 0px 5px gray;
+  border: none;
+  box-shadow: 0 0 2px white;
 }
 
 .multi-range-slider-bar-only .caption {
   /* Required for Chrome */
   visibility: hidden;
+}
+
+.legend-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: end;
+  margin-right: 2rem;
+  margin-top: -0.3rem;
+}
+
+.legend-container > div {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+.legend-values {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: calc(100% + 1.4rem);
+  margin-left: -0.2rem;
 }
 </style>

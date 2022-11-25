@@ -1,7 +1,5 @@
 <template>
-  <div>
-    <div id="horizon-chart-container"></div>
-  </div>
+  <div :id="id" class="horizon-chart-container"></div>
 </template>
 
 <script>
@@ -24,6 +22,10 @@ export default {
       type: Number,
       required: true,
     },
+    id: {
+      type: String,
+      required: true,
+    },
   },
   data() {
     return { chart: null };
@@ -40,7 +42,7 @@ export default {
         const leftMargin = Math.floor(
           (width - this.numberOfDataPoints) / 2 - 1
         );
-        select("#horizon-chart-container")
+        select(`#${this.id}`)
           .selectAll(".horizon")
           .style("scale", `${scale} 1`)
           .style("margin-left", `${leftMargin}px`);
@@ -59,7 +61,7 @@ export default {
         "#d73027",
       ]);
 
-    select("#horizon-chart-container")
+    select(`#${this.id}`)
       .selectAll(".horizon")
       .data([this.data])
       .enter()
@@ -73,8 +75,8 @@ export default {
       this.updateSize(value);
     },
     async data(value) {
-      select("#horizon-chart-container").selectAll(".horizon").remove();
-      select("#horizon-chart-container")
+      select(`#${this.id}`).selectAll(".horizon").remove();
+      select(`#${this.id}`)
         .selectAll(".horizon")
         .remove()
         .data([value])
@@ -89,9 +91,8 @@ export default {
 </script>
 
 <style>
-#horizon-chart-container {
-  border: solid 1px #000;
-  border-radius: 4px;
+.horizon-chart-container {
+  border: solid 1px #a4a4a4;
   overflow: hidden;
 }
 .horizon {
