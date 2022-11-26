@@ -279,7 +279,7 @@ export default {
   width: 12px;
   border-radius: 4px;
   border: none;
-  box-shadow: 0 0 2px white;
+  box-shadow: 0 0 2px var(--border-color);
 }
 
 .multi-range-slider-bar-only .caption {

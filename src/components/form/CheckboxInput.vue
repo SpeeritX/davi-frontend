@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <input :id="id" type="checkbox" :checked="initValue" @input="inputChange" />
-    <label>{{ label }}</label>
+    <label :for="id">{{ label }}</label>
   </div>
 </template>
 

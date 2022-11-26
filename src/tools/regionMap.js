@@ -1,8 +1,6 @@
 import L from "leaflet";
-import mapService from "../services/mapService";
 
 let geojson;
-let matrixData;
 
 const getColor = (value, max) => {
   const proportion = value / max;
@@ -15,7 +13,7 @@ const getColor = (value, max) => {
     : "#f0f0f0";
 };
 
-const styleRegion = (region, maxValue, choropleth) => {
+const styleRegion = (region, matrixData, maxValue, choropleth) => {
   return {
     fillColor: choropleth
       ? getColor(matrixData[region.properties.name], maxValue)
@@ -52,12 +50,9 @@ const styleRegion = (region, maxValue, choropleth) => {
 //   });
 // };
 
-const updateRegionMap = async (filters, stateData, choropleth) => {
-  const response = await mapService.getFlightPerRegion(filters);
-  matrixData = response.data;
-  const maxValue = Math.max(...Object.values(Object.values(matrixData)));
+const updateRegionMap = async (matrixData, maxValue, stateData, choropleth) => {
   geojson = L.geoJson(stateData, {
-    style: (e) => styleRegion(e, maxValue, choropleth),
+    style: (e) => styleRegion(e, matrixData, maxValue, choropleth),
     // onEachFeature: onEachRegion,
     pane: "regions",
   });

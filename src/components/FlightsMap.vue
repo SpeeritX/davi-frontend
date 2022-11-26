@@ -7,7 +7,9 @@
       }"
     ></div>
     <div class="legend-anchor">
-      <div class="map-legend-container">Legend</div>
+      <div class="map-legend-container">
+        <MapLegend :maxNumberOfFlights="maxRegionValue" />
+      </div>
     </div>
   </div>
 </template>
@@ -20,16 +22,20 @@ import countryData from "../assets/countries.json";
 import updateRegionMap from "../tools/regionMap";
 import updateFlightPaths from "../tools/flightPaths";
 import setCountryMap from "../tools/countryMap";
+import mapService from "../services/mapService";
+import MapLegend from "./MapLegend";
 
 export default {
   name: "FlightsMap",
   props: ["filters", "region", "dates", "shortestPaths", "choroplethMap"],
+  components: { MapLegend },
   data() {
     return {
       map: null,
       flightsLayers: null,
       regionLayers: null,
       loading: true,
+      maxRegionValue: 0,
     };
   },
   async mounted() {
@@ -102,9 +108,19 @@ export default {
     async updateRegions() {
       this.loading = true;
       this.regionLayers?.clearLayers();
+      const response = await mapService.getFlightPerRegion({
+        ...this.filters,
+        ...this.dates,
+        current_region: this.region,
+      });
+      const matrixData = response.data;
+      this.maxRegionValue = Math.max(
+        ...Object.values(Object.values(matrixData))
+      );
       (
         await updateRegionMap(
-          { ...this.filters, ...this.dates, current_region: this.region },
+          matrixData,
+          this.maxRegionValue,
           stateData,
           this.choroplethMap
         )
@@ -133,11 +149,17 @@ export default {
 
 .map-legend-container {
   padding: 0.8rem;
-  height: 8rem;
+  height: 13rem;
+  width: 12rem;
   position: relative;
-  bottom: 8rem;
-  background-color: rgba(255, 255, 255, 0.5);
+  bottom: calc(13rem + 1px);
+  background-color: white;
   z-index: 999;
   box-sizing: border-box;
+  border-radius: 4px 0 0 0;
+  opacity: 0.5;
+}
+.map-legend-container:hover {
+  opacity: 1;
 }
 </style>

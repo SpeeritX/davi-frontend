@@ -93,5 +93,6 @@ export default {
   border: 2px solid var(--primary-color);
   box-sizing: border-box;
   box-shadow: none;
+  cursor: pointer;
 }
 </style>
