@@ -17,8 +17,8 @@
         v-if="state.flightsCount.length"
         id="timeline"
         @update-dates="updateDates"
-        minDate="2022-02-22"
-        maxDate="2022-06-18"
+        :minDate="data.minDate"
+        :maxDate="data.maxDate"
         :flightsCount="state.flightsCount"
       />
     </div>
@@ -48,13 +48,13 @@ export default {
   data() {
     return {
       data: {
-        minDate: "2022-02-22",
+        minDate: "2022-02-23",
         maxDate: "2022-06-18",
       },
       state: {
         filters: {
-          date_1: "2022-02-22",
-          date_2: "2022-02-22",
+          date_1: "2022-02-23",
+          date_2: "2022-02-23",
         },
         flightsCount: [],
         shortestPaths: false,
