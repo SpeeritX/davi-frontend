@@ -6,7 +6,7 @@ const style = () => {
   return {
     weight: 3,
     opacity: 1,
-    color: "black",
+    color: "#737373",
     dashArray: "3",
     fillOpacity: 0,
   };

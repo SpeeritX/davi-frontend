@@ -2,7 +2,7 @@
   <div class="filters-container">
     <h2>DaVi - Flights in Ukraine</h2>
     <div class="filter">
-      <p class="input-label">Velocity (kn)</p>
+      <p class="input-label">Velocity (km/h)</p>
       <SmallInput
         id="velocityMin"
         label="Min"
@@ -23,7 +23,7 @@
       />
     </div>
     <div class="filter">
-      <p class="input-label">Barometric altitude (ft)</p>
+      <p class="input-label">Barometric altitude (m)</p>
       <SmallInput
         id="altitudeMin"
         label="Min"
@@ -53,7 +53,7 @@
     <MultiSelectInput
       id="currentCountry"
       class="filter"
-      label="Current country"
+      label="Country"
       :options="data.currentCountryOptions"
       @update-value="(value) => updateFilter('currentCountry', value)"
     />
@@ -66,6 +66,12 @@
     />
     <div class="filter">
       <p class="input-label">Additional options</p>
+      <CheckboxInput
+        id="choroplethMap"
+        :initValue="state.choroplethMap"
+        @update-value="(value) => updateFilter('choroplethMap', value)"
+        label="Show the choropleth map"
+      />
       <CheckboxInput
         id="shortestPaths"
         @update-value="(value) => updateFilter('shortestPaths', value)"
@@ -81,6 +87,8 @@ import SmallInput from "./form/SmallInput";
 import MultiSelectInput from "./form/MultiSelectInput";
 import SelectInput from "./form/SelectInput";
 import CheckboxInput from "./form/CheckboxInput";
+import { originCountries, currentCountries } from "../tools/countryList";
+
 export default {
   name: "FlightsFilters",
   components: {
@@ -90,36 +98,35 @@ export default {
     CheckboxInput,
   },
   props: {},
-  emits: ["updateFilters", "updateShortestPaths"],
+  emits: ["updateFilters", "updateShortestPaths", "updateChoroplethMap"],
   data() {
     return {
       data: {
         velocityMin: 0,
         velocityMax: 2062,
-        altitudeMin: -137,
-        altitudeMax: 38618,
-        currentCountryOptions: ["Ukraine", "Russia", "Poland"],
-        originCountryOptions: ["Ukraine", "Russia", "Poland"],
+        altitudeMin: -42,
+        altitudeMax: 11770,
+        currentCountryOptions: currentCountries,
+        originCountryOptions: originCountries,
         squawkOptions: ["other", "7500", "7700"],
       },
       state: {
         velocityMin: 0,
-        velocityMax: 2062,
-        altitudeMin: -137,
-        altitudeMax: 38618,
+        velocityMax: 3819,
+        altitudeMin: -42,
+        altitudeMax: 11770,
         squawk: null,
         currentCountry: null,
         originCountry: null,
         shortestPaths: false,
+        choroplethMap: true,
       },
       filtersModified: false,
     };
   },
-  mounted() {},
-  computed: {},
   methods: {
     updateFilter(filter, newValue) {
-      if (filter != "shortestPaths") {
+      if (!["shortestPaths", "choroplethMap"].includes(filter)) {
         this.filtersModified = true;
       }
       this.state[filter] = newValue;
@@ -129,12 +136,13 @@ export default {
         str.replace(/[A-Z]/g, (letter) => `_${letter.toLowerCase()}`);
       let query = {};
       Object.keys(this.state).forEach((key) => {
-        if (key != "shortestPaths" && this.state[key] !== null) {
+        if (!["shortestPaths", "choroplethMap"].includes(key)) {
           const param = camelToSnakeCase(key);
           query[param] = this.state[key];
         }
       });
       this.$emit("updateShortestPaths", this.state.shortestPaths);
+      this.$emit("updateChoroplethMap", this.state.choroplethMap);
       if (this.filtersModified) {
         this.$emit("updateFilters", query);
       }

@@ -4,34 +4,27 @@ import mapService from "../services/mapService";
 let geojson;
 let matrixData;
 
-const getColor = (value) => {
-  return value > 1000
-    ? "#800026"
-    : value > 500
-    ? "#BD0026"
-    : value > 200
-    ? "#E31A1C"
-    : value > 100
-    ? "#FC4E2A"
-    : value > 50
-    ? "#FD8D3C"
-    : value > 20
-    ? "#FEB24C"
-    : value > 10
-    ? "#FED976"
-    : value > 0
-    ? "#FFEDA0"
-    : "#FFFFFF";
+const getColor = (value, max) => {
+  const proportion = value / max;
+  return proportion > 2 / 3
+    ? "#969696"
+    : proportion > 1 / 3
+    ? "#bdbdbd"
+    : proportion > 0
+    ? "#d9d9d9"
+    : "#f0f0f0";
 };
 
-const styleRegion = (region) => {
+const styleRegion = (region, maxValue, choropleth) => {
   return {
-    fillColor: getColor(matrixData[region.properties.name]),
+    fillColor: choropleth
+      ? getColor(matrixData[region.properties.name], maxValue)
+      : "#f0f0f0",
     weight: 2,
     opacity: 1,
     color: "white",
     dashArray: "3",
-    fillOpacity: 0.7,
+    fillOpacity: 1,
   };
 };
 
@@ -59,11 +52,12 @@ const styleRegion = (region) => {
 //   });
 // };
 
-const updateRegionMap = async (filters, stateData) => {
+const updateRegionMap = async (filters, stateData, choropleth) => {
   const response = await mapService.getFlightPerRegion(filters);
   matrixData = response.data;
+  const maxValue = Math.max(...Object.values(Object.values(matrixData)));
   geojson = L.geoJson(stateData, {
-    style: (e) => styleRegion(e),
+    style: (e) => styleRegion(e, maxValue, choropleth),
     // onEachFeature: onEachRegion,
     pane: "regions",
   });

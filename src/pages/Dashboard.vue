@@ -4,13 +4,17 @@
       id="filters"
       @update-filters="updateFilters"
       @update-shortest-paths="(val) => (this.state.shortestPaths = val)"
+      @update-choropleth-map="(val) => (this.state.choroplethMap = val)"
     />
     <div id="main-content">
       <div id="flights-container">
         <FlightsMap
           id="flights-map"
           :filters="state.filters"
+          :dates="state.dates"
+          :region="state.current_region"
           :shortestPaths="state.shortestPaths"
+          :choroplethMap="state.choroplethMap"
         />
       </div>
       <DateSlider
@@ -26,9 +30,15 @@
       <MatrixChart
         id="matrix"
         :filters="state.filters"
+        :dates="state.dates"
         @update-regions="updateRegions"
       />
-      <ParallelSets id="parallel" :filters="state.filters" />
+      <ParallelSets
+        id="parallel"
+        :filters="state.filters"
+        :dates="state.dates"
+        :region="state.current_region"
+      />
     </div>
   </div>
 </template>
@@ -56,56 +66,47 @@ export default {
         maxDate: "2022-06-18",
       },
       state: {
-        filters: {
+        filters: {},
+        dates: {
           date_1: "2022-02-23",
           date_2: "2022-02-23",
         },
+        current_region: "",
         flightsCount: [],
         shortestPaths: false,
+        choroplethMap: true,
       },
     };
   },
-  computed: {
-    queryDate() {
-      return {
-        date_1: this.state.selectedMinDate,
-        date_2: this.state.selectedMaxDate,
-      };
-    },
+  async mounted() {
+    await this.fetchFlightsCount();
   },
   methods: {
     async updateDates(dates) {
-      this.state.filters = {
-        ...this.state.filters,
+      this.state.dates = {
         date_1: dates.minDate,
         date_2: dates.maxDate,
       };
     },
     async updateRegions(regions) {
-      console.log(regions);
+      this.state.current_region = regions;
+      await this.fetchFlightsCount();
+    },
+    async updateFilters(newFilters) {
       this.state.filters = {
-        ...this.state.filters,
-        current_region: regions,
+        ...newFilters,
       };
+      await this.fetchFlightsCount();
     },
     async fetchFlightsCount() {
       const response = await FlightsService.getFlightsCount({
         ...this.state.filters,
+        current_region: this.state.current_region,
         date_1: this.data.minDate,
         date_2: this.data.maxDate,
       });
       this.state.flightsCount = response.data.data.flat();
     },
-    async updateFilters(newFilters) {
-      this.state.filters = {
-        ...this.state.filters,
-        ...newFilters,
-      };
-      await this.fetchFlightsCount();
-    },
-  },
-  async mounted() {
-    await this.fetchFlightsCount();
   },
 };
 </script>

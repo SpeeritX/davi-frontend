@@ -1,8 +1,13 @@
 <template>
   <div>
-    <div id="flight-map"></div>
+    <div
+      id="flight-map"
+      v-bind:style="{
+        backgroundColor: loading ? 'transparent' : '#bae5ff',
+      }"
+    ></div>
     <div class="legend-anchor">
-      <div class="legend-container">Legend</div>
+      <div class="map-legend-container">Legend</div>
     </div>
   </div>
 </template>
@@ -18,12 +23,13 @@ import setCountryMap from "../tools/countryMap";
 
 export default {
   name: "FlightsMap",
-  props: ["filters", "shortestPaths"],
+  props: ["filters", "region", "dates", "shortestPaths", "choroplethMap"],
   data() {
     return {
       map: null,
       flightsLayers: null,
       regionLayers: null,
+      loading: true,
     };
   },
   async mounted() {
@@ -47,7 +53,7 @@ export default {
       maxBoundsViscosity: 1,
     }).setView([50.45, 30.52], 6.3);
     this.map.createPane("flights");
-    this.map.getPane("flights").style.zIndex = 1000;
+    this.map.getPane("flights").style.zIndex = 998;
     this.map.createPane("regions");
     this.map.getPane("regions").style.zIndex = 900;
     this.map.createPane("countries");
@@ -59,6 +65,7 @@ export default {
     setCountryMap(countryData).addTo(this.map);
     await this.updateRegions();
     await this.updateFlights();
+    this.loading = false;
   },
   watch: {
     async shortestPaths() {
@@ -68,23 +75,47 @@ export default {
       await this.updateRegions();
       await this.updateFlights();
     },
+    async region() {
+      await this.updateRegions();
+      await this.updateFlights();
+    },
+    async dates() {
+      await this.updateRegions();
+      await this.updateFlights();
+    },
+    async choroplethMap() {
+      await this.updateRegions();
+    },
   },
   methods: {
     async updateFlights() {
-      this.flightsLayers.clearLayers();
-      (await updateFlightPaths(this.filters, this.shortestPaths)).addTo(
-        this.flightsLayers
-      );
+      this.flightsLayers?.clearLayers();
+      if (this.region) {
+        (
+          await updateFlightPaths(
+            { ...this.filters, ...this.dates, current_region: this.region },
+            this.shortestPaths
+          )
+        ).addTo(this.flightsLayers);
+      }
     },
     async updateRegions() {
-      this.regionLayers.clearLayers();
-      (await updateRegionMap(this.filters, stateData)).addTo(this.regionLayers);
+      this.loading = true;
+      this.regionLayers?.clearLayers();
+      (
+        await updateRegionMap(
+          { ...this.filters, ...this.dates, current_region: this.region },
+          stateData,
+          this.choroplethMap
+        )
+      ).addTo(this.regionLayers);
+      this.loading = false;
     },
   },
 };
 </script>
 
-<style scoped>
+<style>
 #flight-map {
   width: 100%;
   height: 100%;
@@ -100,7 +131,7 @@ export default {
   height: 0;
 }
 
-.legend-container {
+.map-legend-container {
   padding: 0.8rem;
   height: 8rem;
   position: relative;

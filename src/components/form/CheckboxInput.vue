@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <input :id="id" type="checkbox" @input="inputChange" />
+    <input :id="id" type="checkbox" :checked="initValue" @input="inputChange" />
     <label>{{ label }}</label>
   </div>
 </template>
@@ -18,6 +18,11 @@ export default {
     label: {
       type: String,
       required: true,
+    },
+    initValue: {
+      type: Boolean,
+      required: false,
+      deafult: false,
     },
   },
   methods: {
@@ -38,5 +43,6 @@ label {
   flex-direction: row;
   align-items: start;
   margin: 0;
+  margin-bottom: 0.4rem;
 }
 </style>
