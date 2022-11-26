@@ -2,7 +2,7 @@
   <div class="container">
     <label class="input-label">{{ label }}</label>
     <select :id="id" v-model="value" @input="chooseOption">
-      <option disabled selected>Choose</option>
+      <option selected value="Choose">Choose</option>
       <option v-for="option in options" v-bind:key="option">
         {{ option }}
       </option>
@@ -50,7 +50,6 @@ export default {
   flex-direction: column;
   justify-content: space-between;
   align-items: start;
-  margin: 2rem 0;
 }
 select {
   width: 100%;

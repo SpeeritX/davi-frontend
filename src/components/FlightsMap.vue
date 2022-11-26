@@ -1,6 +1,9 @@
 <template>
   <div>
     <div id="flight-map"></div>
+    <div class="legend-anchor">
+      <div class="legend-container">Legend</div>
+    </div>
   </div>
 </template>
 
@@ -85,5 +88,25 @@ export default {
 #flight-map {
   width: 100%;
   height: 100%;
+  border: 1px solid var(--border-color);
+}
+
+.legend-anchor {
+  position: relative;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  height: 0;
+}
+
+.legend-container {
+  padding: 0.8rem;
+  height: 8rem;
+  position: relative;
+  bottom: 8rem;
+  background-color: rgba(255, 255, 255, 0.5);
+  z-index: 999;
+  box-sizing: border-box;
 }
 </style>

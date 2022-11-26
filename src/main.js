@@ -3,8 +3,9 @@ import App from "./App.vue";
 import router from "./router";
 
 import { library } from "@fortawesome/fontawesome-svg-core";
-import { faXmark } from "@fortawesome/free-solid-svg-icons";
+import { faXmark, faExclamation } from "@fortawesome/free-solid-svg-icons";
 
 library.add(faXmark);
+library.add(faExclamation);
 
 createApp(App).use(router).mount("#app");

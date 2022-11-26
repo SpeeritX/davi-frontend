@@ -45,18 +45,21 @@
     </div>
     <SelectInput
       id="squawk"
+      class="filter"
       label="Squawk"
       :options="data.squawkOptions"
       @update-value="(value) => updateFilter('squawk', value)"
     />
     <MultiSelectInput
       id="currentCountry"
+      class="filter"
       label="Current country"
       :options="data.currentCountryOptions"
       @update-value="(value) => updateFilter('currentCountry', value)"
     />
     <MultiSelectInput
       id="originCountry"
+      class="filter"
       label="Country of origin"
       :options="data.originCountryOptions"
       @update-value="(value) => updateFilter('originCountry', value)"
@@ -131,7 +134,6 @@ export default {
           query[param] = this.state[key];
         }
       });
-      console.log(query);
       this.$emit("updateShortestPaths", this.state.shortestPaths);
       if (this.filtersModified) {
         this.$emit("updateFilters", query);
@@ -144,13 +146,13 @@ export default {
 
 <style scoped>
 .filter {
-  margin: 1.6rem 0;
+  margin: 1rem 0;
   text-align: left;
 }
 
 .filters-container {
   height: 100%;
-  padding: 1rem;
+  padding: 0.5rem;
   box-sizing: border-box;
   background-color: #f8f8f8;
   box-shadow: 0px 0px 6px rgb(153, 153, 153);

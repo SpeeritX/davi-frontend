@@ -92,7 +92,7 @@ export default {
 
 <style>
 .horizon-chart-container {
-  border: solid 1px #a4a4a4;
+  border: solid 1px var(--border-color);
   overflow: hidden;
 }
 .horizon {

@@ -9,6 +9,11 @@ export default {
 </script>
 
 <style>
+:root {
+  --primary-color: #4e64a0;
+  --border-color: #a4a4a4;
+}
+
 html,
 body,
 #app {
@@ -26,19 +31,23 @@ select {
   background-color: white;
 }
 
+option[value="Choose"] {
+  color: gray;
+}
+
 input:focus,
 input:focus-visible {
-  outline: 1px solid #4e64a0;
+  outline: 1px solid var(--primary-color);
 }
 .input-label {
-  font-size: 1rem;
-  color: #4e64a0;
-  margin: 0.5rem 0;
+  font-size: 0.9rem;
+  color: var(--primary-color);
+  margin: 0.3rem 0;
   text-align: left;
 }
 button,
 button:active {
-  background-color: #4e64a0;
+  background-color: var(--primary-color);
   color: white;
   border-radius: 4px;
   outline: none;
@@ -55,7 +64,7 @@ button svg {
   color: black;
 }
 h2 {
-  color: #4e64a0;
+  color: var(--primary-color);
   font-weight: 400;
   width: 100%;
   padding-bottom: 0.5rem;

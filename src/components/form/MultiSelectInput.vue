@@ -78,7 +78,6 @@ export default {
   flex-direction: column;
   justify-content: space-between;
   align-items: start;
-  margin: 2rem 0;
 }
 select {
   width: 100%;
@@ -95,5 +94,6 @@ select {
   border: none;
   box-shadow: none;
   background-color: transparent;
+  padding: 0.19rem 0.4rem;
 }
 </style>
