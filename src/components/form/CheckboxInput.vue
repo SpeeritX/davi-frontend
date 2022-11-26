@@ -22,7 +22,6 @@ export default {
   },
   methods: {
     inputChange(e) {
-      console.log(e.currentTarget.checked);
       this.$emit("updateValue", e.currentTarget.checked);
     },
   },

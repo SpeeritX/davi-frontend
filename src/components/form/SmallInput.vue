@@ -53,7 +53,6 @@ export default {
   computed: {},
   methods: {
     inputChange(e) {
-      console.log(e.target.value);
       this.$emit("updateValue", e.target.value);
     },
   },

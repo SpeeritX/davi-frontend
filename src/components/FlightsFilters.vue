@@ -134,7 +134,6 @@ export default {
           query[param] = this.state[key];
         }
       });
-      console.log(query);
       this.$emit("updateShortestPaths", this.state.shortestPaths);
       if (this.filtersModified) {
         this.$emit("updateFilters", query);

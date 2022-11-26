@@ -2,7 +2,7 @@
   <div class="container">
     <label class="input-label">{{ label }}</label>
     <select :id="id" v-model="value" @input="chooseOption">
-      <option disabled selected>Choose</option>
+      <option selected value="Choose">Choose</option>
       <option v-for="option in options" v-bind:key="option">
         {{ option }}
       </option>

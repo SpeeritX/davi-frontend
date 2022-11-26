@@ -1,21 +1,31 @@
 <template>
-  <div class="parallel-container">
+  <NoFlights v-if="noFlights" class="no-flights"> </NoFlights>
+  <div v-else class="parallel-container">
     <div id="parallel-sets"></div>
   </div>
 </template>
 
 <script setup>
 import Plotly from "plotly.js-dist";
-import { onMounted, defineProps } from "vue";
+import { onMounted, onUpdated, defineProps, ref } from "vue";
 import parallelService from "@/services/parallelService";
+import NoFlights from "./NoFlights";
 
 const props = defineProps({
   filters: Object,
 });
 
+const noFlights = ref(false);
+
 const getData = async () => {
   const response = await parallelService.getParallelSets(props.filters);
   const parallel = response.data.data;
+  if (parallel.length === 0) {
+    noFlights.value = true;
+    return;
+  } else {
+    noFlights.value = false;
+  }
   var SPIDim = {
     values: parallel.map((val) => val[2]),
     label: "SPI",
@@ -49,11 +59,15 @@ const getData = async () => {
   };
   var data = [trace1];
   var layout = { margin: { l: 0, r: 0, t: 24, b: 10 } };
-  Plotly.newPlot("parallel-sets", data, layout);
+  await Plotly.newPlot("parallel-sets", data, layout);
 };
 
 onMounted(async () => {
-  getData();
+  await getData();
+});
+
+onUpdated(async () => {
+  await getData();
 });
 </script>
 

@@ -31,6 +31,10 @@ select {
   background-color: white;
 }
 
+option[value="Choose"] {
+  color: gray;
+}
+
 input:focus,
 input:focus-visible {
   outline: 1px solid var(--primary-color);

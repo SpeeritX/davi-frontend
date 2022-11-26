@@ -94,5 +94,6 @@ select {
   border: none;
   box-shadow: none;
   background-color: transparent;
+  padding: 0.19rem 0.4rem;
 }
 </style>
