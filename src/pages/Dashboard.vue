@@ -74,7 +74,7 @@ export default {
         current_region: "",
         flightsCount: [],
         shortestPaths: false,
-        choroplethMap: false,
+        choroplethMap: true,
       },
     };
   },

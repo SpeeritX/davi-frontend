@@ -122,9 +122,6 @@ export default {
       filtersModified: false,
     };
   },
-  beforeMount() {
-    this.emitUpdateFilters();
-  },
   methods: {
     updateFilter(filter, newValue) {
       if (!["shortestPaths", "choroplethMap"].includes(filter)) {
