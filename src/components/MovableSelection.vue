@@ -87,8 +87,11 @@ export default {
 }
 
 .movable-selection {
-  height: 40px;
-  top: -60px;
+  height: 44px;
+  top: -62px;
   position: relative;
+  border: 2px solid var(--primary-color);
+  box-sizing: border-box;
+  box-shadow: none;
 }
 </style>

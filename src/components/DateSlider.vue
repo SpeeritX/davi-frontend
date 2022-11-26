@@ -267,9 +267,9 @@ export default {
 
 .multi-range-slider-bar-only .bar-inner {
   background-color: transparent;
-  backdrop-filter: brightness(120%) hue-rotate(10deg);
-  box-shadow: none;
   border: none;
+  box-sizing: border-box;
+  box-shadow: none;
 }
 
 .multi-range-slider-bar-only .thumb::before {

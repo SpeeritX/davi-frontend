@@ -2,7 +2,7 @@
   <div>
     <div id="flight-map"></div>
     <div class="legend-anchor">
-      <div class="legend-container">Legend</div>
+      <div class="map-legend-container">Legend</div>
     </div>
   </div>
 </template>
@@ -47,7 +47,7 @@ export default {
       maxBoundsViscosity: 1,
     }).setView([50.45, 30.52], 6.3);
     this.map.createPane("flights");
-    this.map.getPane("flights").style.zIndex = 1000;
+    this.map.getPane("flights").style.zIndex = 998;
     this.map.createPane("regions");
     this.map.getPane("regions").style.zIndex = 900;
     this.map.createPane("countries");
@@ -84,7 +84,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style>
 #flight-map {
   width: 100%;
   height: 100%;
@@ -100,7 +100,7 @@ export default {
   height: 0;
 }
 
-.legend-container {
+.map-legend-container {
   padding: 0.8rem;
   height: 8rem;
   position: relative;
@@ -108,5 +108,8 @@ export default {
   background-color: rgba(255, 255, 255, 0.5);
   z-index: 999;
   box-sizing: border-box;
+}
+.leaflet-container {
+  background-color: #bae5ff;
 }
 </style>

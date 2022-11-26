@@ -2,7 +2,7 @@
   <div class="filters-container">
     <h2>DaVi - Flights in Ukraine</h2>
     <div class="filter">
-      <p class="input-label">Velocity (kn)</p>
+      <p class="input-label">Velocity (km/h)</p>
       <SmallInput
         id="velocityMin"
         label="Min"
@@ -23,7 +23,7 @@
       />
     </div>
     <div class="filter">
-      <p class="input-label">Barometric altitude (ft)</p>
+      <p class="input-label">Barometric altitude (m)</p>
       <SmallInput
         id="altitudeMin"
         label="Min"
@@ -53,7 +53,7 @@
     <MultiSelectInput
       id="currentCountry"
       class="filter"
-      label="Current country"
+      label="Country"
       :options="data.currentCountryOptions"
       @update-value="(value) => updateFilter('currentCountry', value)"
     />
@@ -96,17 +96,17 @@ export default {
       data: {
         velocityMin: 0,
         velocityMax: 2062,
-        altitudeMin: -137,
-        altitudeMax: 38618,
+        altitudeMin: -42,
+        altitudeMax: 11770,
         currentCountryOptions: ["Ukraine", "Russia", "Poland"],
         originCountryOptions: ["Ukraine", "Russia", "Poland"],
         squawkOptions: ["other", "7500", "7700"],
       },
       state: {
         velocityMin: 0,
-        velocityMax: 2062,
-        altitudeMin: -137,
-        altitudeMax: 38618,
+        velocityMax: 3819,
+        altitudeMin: -42,
+        altitudeMax: 11770,
         squawk: null,
         currentCountry: null,
         originCountry: null,
