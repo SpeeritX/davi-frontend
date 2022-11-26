@@ -13,12 +13,18 @@ import NoFlights from "./NoFlights";
 
 const props = defineProps({
   filters: Object,
+  dates: Object,
+  region: String,
 });
 
 const noFlights = ref(false);
 
 const getData = async () => {
-  const response = await parallelService.getParallelSets(props.filters);
+  const response = await parallelService.getParallelSets({
+    ...props.filters,
+    ...props.dates,
+    current_region: props.region,
+  });
   const parallel = response.data.data;
   if (parallel.length === 0) {
     noFlights.value = true;
@@ -42,7 +48,6 @@ const getData = async () => {
   };
 
   var color = ukraineDim.values;
-  console.log(typeof ukraineDim.values[0]);
   var colorscale = [
     [0, "lightsteelblue"],
     [1, "mediumseagreen"],

@@ -6,20 +6,20 @@ let matrixData;
 
 const getColor = (value, max) => {
   const proportion = value / max;
-  return proportion > 0.75
-    ? "#252525"
-    : proportion > 0.5
-    ? "#636363"
-    : proportion > 0.25
+  return proportion > 2 / 3
     ? "#969696"
-    : proportion > 0
+    : proportion > 1 / 3
     ? "#bdbdbd"
-    : "#d9d9d9";
+    : proportion > 0
+    ? "#d9d9d9"
+    : "#f0f0f0";
 };
 
-const styleRegion = (region, maxValue) => {
+const styleRegion = (region, maxValue, choropleth) => {
   return {
-    fillColor: getColor(matrixData[region.properties.name], maxValue),
+    fillColor: choropleth
+      ? getColor(matrixData[region.properties.name], maxValue)
+      : "#f0f0f0",
     weight: 2,
     opacity: 1,
     color: "white",
@@ -52,13 +52,12 @@ const styleRegion = (region, maxValue) => {
 //   });
 // };
 
-const updateRegionMap = async (filters, stateData) => {
+const updateRegionMap = async (filters, stateData, choropleth) => {
   const response = await mapService.getFlightPerRegion(filters);
   matrixData = response.data;
   const maxValue = Math.max(...Object.values(Object.values(matrixData)));
-  console.log(maxValue);
   geojson = L.geoJson(stateData, {
-    style: (e) => styleRegion(e, maxValue),
+    style: (e) => styleRegion(e, maxValue, choropleth),
     // onEachFeature: onEachRegion,
     pane: "regions",
   });

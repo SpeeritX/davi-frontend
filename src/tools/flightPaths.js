@@ -28,19 +28,6 @@ const updateFlightPaths = async (filters, shortestPaths) => {
   const flights = await fetchFlights(filters);
   const layers = L.layerGroup([], { pane: "flights" });
 
-  // const sliceWithStep = (data, step) => {
-  //   // Decreases points density to increase performance
-  //   let i = 0;
-  //   const processedData = [];
-  //   while (i < data.length) {
-  //     processedData.push(data[i]);
-  //     i += step;
-  //   }
-  //   if (i < data.length - 1) {
-  //     processedData.append(data[data.length - 1]);
-  //   }
-  //   return processedData;
-  // };
   if (shortestPaths) {
     flights.forEach((flight) => {
       const positions = JSON.parse(
@@ -49,7 +36,7 @@ const updateFlightPaths = async (filters, shortestPaths) => {
       layers.addLayer(
         L.polyline([positions[0], positions[positions.length - 1]], {
           opacity: 0.3,
-          color: "blue",
+          color: "black",
           weight: 1,
           pane: "flights",
         })
@@ -67,17 +54,12 @@ const updateFlightPaths = async (filters, shortestPaths) => {
       layers.addLayer(
         L.polyline(path, {
           opacity: 0.3,
-          color: "orange",
+          color: "#7c009b", //#c51b8a //#7e68af
           weight: 1,
           pane: "flights",
         })
       );
     });
-    // path.map((point) =>
-    //   L.circleMarker(point, { radius: 1, color })
-    //     .on("click", () => onClick(flight, positions))
-    //     .addTo(map)
-    // );
   });
   return layers;
 };

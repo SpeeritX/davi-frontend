@@ -1,6 +1,11 @@
 <template>
   <div>
-    <div id="flight-map"></div>
+    <div
+      id="flight-map"
+      v-bind:style="{
+        backgroundColor: loading ? 'transparent' : '#bae5ff',
+      }"
+    ></div>
     <div class="legend-anchor">
       <div class="map-legend-container">Legend</div>
     </div>
@@ -18,12 +23,13 @@ import setCountryMap from "../tools/countryMap";
 
 export default {
   name: "FlightsMap",
-  props: ["filters", "shortestPaths"],
+  props: ["filters", "region", "dates", "shortestPaths", "choroplethMap"],
   data() {
     return {
       map: null,
       flightsLayers: null,
       regionLayers: null,
+      loading: true,
     };
   },
   async mounted() {
@@ -59,6 +65,7 @@ export default {
     setCountryMap(countryData).addTo(this.map);
     await this.updateRegions();
     await this.updateFlights();
+    this.loading = false;
   },
   watch: {
     async shortestPaths() {
@@ -68,17 +75,41 @@ export default {
       await this.updateRegions();
       await this.updateFlights();
     },
+    async region() {
+      await this.updateRegions();
+      await this.updateFlights();
+    },
+    async dates() {
+      await this.updateRegions();
+      await this.updateFlights();
+    },
+    async choroplethMap() {
+      await this.updateRegions();
+    },
   },
   methods: {
     async updateFlights() {
-      this.flightsLayers.clearLayers();
-      (await updateFlightPaths(this.filters, this.shortestPaths)).addTo(
-        this.flightsLayers
-      );
+      this.flightsLayers?.clearLayers();
+      if (this.region) {
+        (
+          await updateFlightPaths(
+            { ...this.filters, ...this.dates, current_region: this.region },
+            this.shortestPaths
+          )
+        ).addTo(this.flightsLayers);
+      }
     },
     async updateRegions() {
-      this.regionLayers.clearLayers();
-      (await updateRegionMap(this.filters, stateData)).addTo(this.regionLayers);
+      this.loading = true;
+      this.regionLayers?.clearLayers();
+      (
+        await updateRegionMap(
+          { ...this.filters, ...this.dates, current_region: this.region },
+          stateData,
+          this.choroplethMap
+        )
+      ).addTo(this.regionLayers);
+      this.loading = false;
     },
   },
 };
@@ -108,8 +139,5 @@ export default {
   background-color: rgba(255, 255, 255, 0.5);
   z-index: 999;
   box-sizing: border-box;
-}
-.leaflet-container {
-  background-color: #bae5ff;
 }
 </style>

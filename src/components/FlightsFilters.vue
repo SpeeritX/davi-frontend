@@ -67,6 +67,12 @@
     <div class="filter">
       <p class="input-label">Additional options</p>
       <CheckboxInput
+        id="choroplethMap"
+        :initValue="state.choroplethMap"
+        @update-value="(value) => updateFilter('choroplethMap', value)"
+        label="Show the choropleth map"
+      />
+      <CheckboxInput
         id="shortestPaths"
         @update-value="(value) => updateFilter('shortestPaths', value)"
         label="Show the shortest connections between the start and end points of flights"
@@ -90,7 +96,7 @@ export default {
     CheckboxInput,
   },
   props: {},
-  emits: ["updateFilters", "updateShortestPaths"],
+  emits: ["updateFilters", "updateShortestPaths", "updateChoroplethMap"],
   data() {
     return {
       data: {
@@ -111,15 +117,17 @@ export default {
         currentCountry: null,
         originCountry: null,
         shortestPaths: false,
+        choroplethMap: true,
       },
       filtersModified: false,
     };
   },
-  mounted() {},
-  computed: {},
+  beforeMount() {
+    this.emitUpdateFilters();
+  },
   methods: {
     updateFilter(filter, newValue) {
-      if (filter != "shortestPaths") {
+      if (!["shortestPaths", "choroplethMap"].includes(filter)) {
         this.filtersModified = true;
       }
       this.state[filter] = newValue;
@@ -129,12 +137,13 @@ export default {
         str.replace(/[A-Z]/g, (letter) => `_${letter.toLowerCase()}`);
       let query = {};
       Object.keys(this.state).forEach((key) => {
-        if (key != "shortestPaths" && this.state[key] !== null) {
+        if (!["shortestPaths", "choroplethMap"].includes(key)) {
           const param = camelToSnakeCase(key);
           query[param] = this.state[key];
         }
       });
       this.$emit("updateShortestPaths", this.state.shortestPaths);
+      this.$emit("updateChoroplethMap", this.state.choroplethMap);
       if (this.filtersModified) {
         this.$emit("updateFilters", query);
       }

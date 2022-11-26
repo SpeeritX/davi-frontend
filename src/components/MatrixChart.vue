@@ -16,6 +16,7 @@ Chart.register(zoomPlugin);
 
 const props = defineProps({
   filters: Object,
+  dates: Object,
 });
 const emit = defineEmits(["updateRegions"]);
 
@@ -23,7 +24,10 @@ let chart;
 
 const matrixChart = ref(null);
 const fillMatrix = async () => {
-  const response = await matrixService.getExpectedMatrix(props.filters);
+  const response = await matrixService.getExpectedMatrix({
+    ...props.filters,
+    ...props.dates,
+  });
   const matrixData = response.data;
   const data = {
     datasets: [
@@ -56,7 +60,6 @@ onMounted(async () => {
   const options = {
     onClick: (e, e2) => {
       const item = data.datasets[0].data[e2[0]?.index];
-      console.log(item);
       emit("updateRegions", `${item.x},${item.y}`);
     },
     aspectRatio: 1,
