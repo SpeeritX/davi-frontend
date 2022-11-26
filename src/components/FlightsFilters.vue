@@ -87,6 +87,8 @@ import SmallInput from "./form/SmallInput";
 import MultiSelectInput from "./form/MultiSelectInput";
 import SelectInput from "./form/SelectInput";
 import CheckboxInput from "./form/CheckboxInput";
+import { originCountries, currentCountries } from "../tools/countryList";
+
 export default {
   name: "FlightsFilters",
   components: {
@@ -104,8 +106,8 @@ export default {
         velocityMax: 2062,
         altitudeMin: -42,
         altitudeMax: 11770,
-        currentCountryOptions: ["Ukraine", "Russia", "Poland"],
-        originCountryOptions: ["Ukraine", "Russia", "Poland"],
+        currentCountryOptions: currentCountries,
+        originCountryOptions: originCountries,
         squawkOptions: ["other", "7500", "7700"],
       },
       state: {
