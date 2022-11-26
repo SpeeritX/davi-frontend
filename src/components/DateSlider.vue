@@ -1,28 +1,5 @@
 <template>
   <div>
-    <div class="timeline-controls">
-      <div>
-        <label for="minDate">Min Date</label>
-        <input
-          type="date"
-          id="minDate"
-          v-model="minDatePicker"
-          :min="minDate"
-          :max="maxDate"
-        />
-      </div>
-      <div>
-        <label for="maxDate">Max Date</label>
-        <input
-          type="date"
-          id="maxDate"
-          v-model="maxDatePicker"
-          :min="minDate"
-          :max="maxDate"
-        />
-      </div>
-      <button @click="emitUpdateDates">Confirm</button>
-    </div>
     <div ref="timelineChartContainer" class="timeline-chart-container">
       <HorizonChart
         id="flightsHorizonChart"
@@ -60,21 +37,48 @@
         @update-value="moveSlider"
       />
     </div>
-    <div class="legend-container">
-      <div>
+    <div class="timeline-controls">
+      <div class="legend-container">
         <span>Number of flights</span>
         <HorizonChart
           id="legend-horizon-chart"
           :data="Array.from({ length: 200 }, (_, i) => i)"
-          :height="20"
+          :height="16"
           :width="200"
         ></HorizonChart>
         <div class="legend-values">
           <span>0</span>
-          <span>{{ maxFlightsCount / 3 }}</span>
-          <span>{{ (maxFlightsCount * 2) / 3 }}</span>
+          <span v-if="maxFlightsCount > 6">{{
+            Math.round(maxFlightsCount / 3)
+          }}</span>
+          <span v-if="maxFlightsCount > 6">{{
+            Math.round((maxFlightsCount * 2) / 3)
+          }}</span>
           <span>{{ maxFlightsCount }}</span>
         </div>
+      </div>
+      <div class="inputs">
+        <div>
+          <label for="minDate">Min Date</label>
+          <input
+            type="date"
+            id="minDate"
+            v-model="minDatePicker"
+            :min="minDate"
+            :max="maxDate"
+          />
+        </div>
+        <div>
+          <label for="maxDate">Max Date</label>
+          <input
+            type="date"
+            id="maxDate"
+            v-model="maxDatePicker"
+            :min="minDate"
+            :max="maxDate"
+          />
+        </div>
+        <button @click="emitUpdateDates">Confirm</button>
       </div>
     </div>
   </div>
@@ -204,22 +208,28 @@ export default {
 <style>
 @import "/node_modules/multi-range-slider-vue/MultiRangeSliderBarOnly.css";
 .timeline-chart-container {
-  padding-bottom: 0.1rem;
+  margin-top: 1rem;
+}
+.timeline-controls {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  font-size: 0.9rem;
 }
 
-.timeline-controls {
+.inputs {
   margin: 1rem 0;
   display: flex;
   flex-direction: row;
   justify-content: flex-end;
 }
 
-.timeline-controls div,
-.timeline-controls button {
+.inputs div,
+.inputs button {
   margin-left: 1rem;
 }
 
-.timeline-controls input {
+.inputs input {
   margin-left: 0.3rem;
 }
 
@@ -279,22 +289,15 @@ export default {
 
 .legend-container {
   display: flex;
-  flex-direction: row;
-  justify-content: end;
-  margin-right: 2rem;
-  margin-top: -0.3rem;
-}
-
-.legend-container > div {
-  display: flex;
   flex-direction: column;
   align-items: flex-start;
+  font-size: 0.9rem;
 }
 .legend-values {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  width: calc(100% + 1.4rem);
+  width: calc(100% + 1rem);
   margin-left: -0.2rem;
 }
 </style>

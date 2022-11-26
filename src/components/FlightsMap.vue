@@ -9,7 +9,6 @@ import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import stateData from "../assets/states.json";
 import countryData from "../assets/countries.json";
-import grayscale from "../tools/TileLayer.Grayscale";
 import updateRegionMap from "../tools/regionMap";
 import updateFlightPaths from "../tools/flightPaths";
 import setCountryMap from "../tools/countryMap";
@@ -44,19 +43,6 @@ export default {
       ],
       maxBoundsViscosity: 1,
     }).setView([50.45, 30.52], 6.3);
-    grayscale(L);
-    L.tileLayer
-      .grayscale("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
-        maxZoom: 19,
-        noWrap: true,
-        maxBounds: [
-          [54, 40],
-          [41, 20],
-        ],
-        attribution:
-          '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
-      })
-      .addTo(this.map);
     this.map.createPane("flights");
     this.map.getPane("flights").style.zIndex = 1000;
     this.map.createPane("regions");
