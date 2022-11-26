@@ -97,6 +97,7 @@ export default {
   display: flex;
   flex-direction: row;
   justify-content: flex-end;
+  height: 0;
 }
 
 .legend-container {
