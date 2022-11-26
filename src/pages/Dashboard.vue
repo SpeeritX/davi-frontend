@@ -6,7 +6,7 @@
       @update-shortest-paths="(val) => (this.state.shortestPaths = val)"
     />
     <div id="main-content">
-      <div id="fligths-container">
+      <div id="flights-container">
         <FlightsMap
           id="flights-map"
           :filters="state.filters"
@@ -120,9 +120,11 @@ export default {
   flex: 6 0 0;
   display: flex;
   flex-direction: column;
+  padding-top: 0.5rem;
+  box-sizing: border-box;
 }
 
-#fligths-container {
+#flights-container {
   flex: 10 1 0;
   display: flex;
   flex-direction: row;
@@ -130,7 +132,7 @@ export default {
 
 #filters {
   flex: 1 1 0;
-  margin-right: 1rem;
+  margin-right: 0.5rem;
 }
 
 #flights-map {
@@ -146,7 +148,8 @@ export default {
   flex: 4 0 0;
   display: flex;
   flex-direction: column;
-  margin-left: 1rem;
+  padding: 0.5rem;
+  box-sizing: border-box;
 }
 #matrix {
   flex: 3 0 0;

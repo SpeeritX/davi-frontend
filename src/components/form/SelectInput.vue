@@ -50,7 +50,6 @@ export default {
   flex-direction: column;
   justify-content: space-between;
   align-items: start;
-  margin: 2rem 0;
 }
 select {
   width: 100%;

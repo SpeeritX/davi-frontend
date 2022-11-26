@@ -100,6 +100,6 @@ onUpdated(async () => {
 .matrix-chart {
   aspect-ratio: 1 / 1;
   width: 100%;
-  border: 1px black solid;
+  border: 1px var(--border-color) solid;
 }
 </style>

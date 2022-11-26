@@ -208,7 +208,7 @@ export default {
 <style>
 @import "/node_modules/multi-range-slider-vue/MultiRangeSliderBarOnly.css";
 .timeline-chart-container {
-  margin-top: 1rem;
+  margin-top: 0.5rem;
 }
 .timeline-controls {
   display: flex;
@@ -274,7 +274,7 @@ export default {
 
 .multi-range-slider-bar-only .thumb::before {
   top: 45px;
-  background-color: #4e64a0;
+  background-color: var(--primary-color);
   margin: -6px;
   width: 12px;
   border-radius: 4px;

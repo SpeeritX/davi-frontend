@@ -48,7 +48,8 @@ const getData = async () => {
     arrangement: "freeform",
   };
   var data = [trace1];
-  Plotly.newPlot("parallel-sets", data, {}, { responsive: true });
+  var layout = { margin: { l: 0, r: 0, t: 24, b: 10 } };
+  Plotly.newPlot("parallel-sets", data, layout);
 };
 
 onMounted(async () => {
