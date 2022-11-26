@@ -23,7 +23,11 @@
       />
     </div>
     <div id="sidebar">
-      <MatrixChart id="matrix" :filters="state.filters" />
+      <MatrixChart
+        id="matrix"
+        :filters="state.filters"
+        @update-regions="updateRegions"
+      />
       <ParallelSets id="parallel" :filters="state.filters" />
     </div>
   </div>
@@ -77,6 +81,13 @@ export default {
         date_2: dates.maxDate,
       };
     },
+    async updateRegions(regions) {
+      console.log(regions);
+      this.state.filters = {
+        ...this.state.filters,
+        current_region: regions,
+      };
+    },
     async fetchFlightsCount() {
       const response = await FlightsService.getFlightsCount({
         ...this.state.filters,
@@ -87,9 +98,8 @@ export default {
     },
     async updateFilters(newFilters) {
       this.state.filters = {
+        ...this.state.filters,
         ...newFilters,
-        date_1: this.state.filters.date_1,
-        date_2: this.state.filters.date_2,
       };
       await this.fetchFlightsCount();
     },

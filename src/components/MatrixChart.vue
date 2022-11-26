@@ -6,7 +6,7 @@
 
 <script setup>
 import Chart from "chart.js/auto";
-import { ref, onMounted, defineProps, onUpdated } from "vue";
+import { ref, onMounted, defineProps, onUpdated, defineEmits } from "vue";
 import { MatrixController, MatrixElement } from "chartjs-chart-matrix";
 import zoomPlugin from "chartjs-plugin-zoom";
 import matrixService from "@/services/matrixService";
@@ -17,6 +17,7 @@ Chart.register(zoomPlugin);
 const props = defineProps({
   filters: Object,
 });
+const emit = defineEmits(["updateRegions"]);
 
 let chart;
 
@@ -54,7 +55,9 @@ onMounted(async () => {
   const ctx = matrixChart.value.getContext("2d");
   const options = {
     onClick: (e, e2) => {
-      console.log(data.datasets[0].data[e2[0]?.index]);
+      const item = data.datasets[0].data[e2[0]?.index];
+      console.log(item);
+      emit("updateRegions", `${item.x},${item.y}`);
     },
     aspectRatio: 1,
     plugins: {
