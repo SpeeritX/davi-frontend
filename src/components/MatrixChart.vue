@@ -6,7 +6,7 @@
 
 <script setup>
 import Chart from "chart.js/auto";
-import { ref, onMounted, defineProps, onUpdated, defineEmits } from "vue";
+import { ref, onMounted, defineProps, defineEmits, watch } from "vue";
 import { MatrixController, MatrixElement } from "chartjs-chart-matrix";
 import zoomPlugin from "chartjs-plugin-zoom";
 import matrixService from "@/services/matrixService";
@@ -23,29 +23,38 @@ let chart;
 
 const matrixChart = ref(null);
 const fillMatrix = async () => {
-  const response = await matrixService.getExpectedMatrix(props.filters);
+  const response = await matrixService.getAbsoluteMatrix({
+    ...props.filters,
+    current_region: null,
+  });
   const matrixData = response.data;
+  let maxVal = 0;
+  let minVal = 0;
+  matrixData.data.map(({ v }) => {
+    if (v > maxVal) maxVal = v;
+    if (v < minVal) minVal = v;
+  });
+  console.log(minVal, maxVal);
   const data = {
     datasets: [
       {
         label: "Basic matrix",
-        data: [
-          ...Object.entries(matrixData).map(([x, obj]) =>
-            Object.entries(obj).map(([y, v]) => ({ x, y, v }))
-          ),
-        ].flat(),
+        data: matrixData.data,
         backgroundColor(context) {
           const value = context.dataset.data[context.dataIndex].v;
-          const alpha = value / 150 + 0;
-          return `rgba(200,200,0,${alpha})`;
+          const convert = (val) =>
+            255 - (255 - val) * Math.floor(value / (maxVal / 12));
+          if (value > 0)
+            return `rgb(${convert(216)},${convert(179)},${convert(101)})`;
+          else return `rgb(${convert(90)},${convert(180)},${convert(172)})`;
         },
         borderColor() {
           return `rgba(0,0,0,200)`;
         },
         width: ({ chart }) =>
-          (chart.chartArea || {}).width / Object.keys(matrixData).length + 1,
+          (chart.chartArea || {}).width / Object.keys(matrixData).length,
         height: ({ chart }) =>
-          (chart.chartArea || {}).height / Object.keys(matrixData).length + 1,
+          (chart.chartArea || {}).height / Object.keys(matrixData).length,
       },
     ],
   };
@@ -55,6 +64,10 @@ onMounted(async () => {
   const ctx = matrixChart.value.getContext("2d");
   const options = {
     onClick: (e, e2) => {
+      if (props.filters.current_region) {
+        emit("updateRegions", undefined);
+        return;
+      }
       const item = data.datasets[0].data[e2[0]?.index];
       console.log(item);
       emit("updateRegions", `${item.x},${item.y}`);
@@ -92,11 +105,25 @@ onMounted(async () => {
     options: options,
   });
 });
-onUpdated(async () => {
-  const data = await fillMatrix();
-  chart.data = data;
-  chart?.update();
-});
+watch(
+  () => props.filters,
+  async (next, prev) => {
+    if (
+      JSON.stringify({
+        ...next,
+        current_region: null,
+      }) !==
+      JSON.stringify({
+        ...prev,
+        current_region: null,
+      })
+    ) {
+      const data = await fillMatrix();
+      chart.data = data;
+      chart?.update();
+    }
+  }
+);
 </script>
 
 <style scoped>
