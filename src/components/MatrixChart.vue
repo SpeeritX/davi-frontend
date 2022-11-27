@@ -17,6 +17,7 @@ Chart.register(zoomPlugin);
 const props = defineProps({
   filters: Object,
   dates: Object,
+  current_region: String,
 });
 const emit = defineEmits(["updateRegions"]);
 
@@ -32,9 +33,12 @@ const fillMatrix = async () => {
   const matrixData = response.data;
   let maxVal = 0;
   let minVal = 0;
-  matrixData.data.map(({ v }) => {
+  const regions = new Set();
+  matrixData.data.map(({ x, y, v }) => {
     if (v > maxVal) maxVal = v;
     if (v < minVal) minVal = v;
+    regions.add(x);
+    regions.add(y);
   });
   console.log(minVal, maxVal);
   const data = {
@@ -45,18 +49,30 @@ const fillMatrix = async () => {
         backgroundColor(context) {
           const value = context.dataset.data[context.dataIndex].v;
           const convert = (val) =>
-            255 - (255 - val) * Math.floor(value / (maxVal / 12));
+            Math.floor(
+              255 -
+                (255 - val) *
+                  (Math.abs(value) / (value > 0 ? maxVal : Math.abs(minVal)))
+            );
+          let color;
           if (value > 0)
-            return `rgb(${convert(216)},${convert(179)},${convert(101)})`;
-          else return `rgb(${convert(90)},${convert(180)},${convert(172)})`;
+            color = `rgb(${convert(216)},${convert(179)},${convert(101)})`;
+          else color = `rgb(${convert(90)},${convert(180)},${convert(172)})`;
+          return color;
         },
         borderColor() {
-          return `rgba(0,0,0,200)`;
+          // const value = context.dataset.data[context.dataIndex].v;
+          // const convert = (val) =>
+          //   255 - (255 - val) * Math.floor(value / maxVal);
+          // let color;
+          // if (value > 0)
+          //   color = `rgb(${convert(0)},${convert(0)},${convert(0)})`;
+          // else color = `rgb(${convert(0)},${convert(0)},${convert(0)})`;
+          return "#616161";
         },
-        width: ({ chart }) =>
-          (chart.chartArea || {}).width / Object.keys(matrixData).length,
-        height: ({ chart }) =>
-          (chart.chartArea || {}).height / Object.keys(matrixData).length,
+        borderWidth: 0,
+        width: ({ chart }) => (chart.chartArea || {}).width / regions.size,
+        height: ({ chart }) => (chart.chartArea || {}).height / regions.size,
       },
     ],
   };
@@ -66,7 +82,7 @@ onMounted(async () => {
   const ctx = matrixChart.value.getContext("2d");
   const options = {
     onClick: (e, e2) => {
-      if (props.filters.current_region) {
+      if (props.current_region) {
         emit("updateRegions", undefined);
         return;
       }
@@ -107,17 +123,18 @@ onMounted(async () => {
   });
 });
 watch(
-  () => props.filters,
+  () => [props.filters, props.dates],
   async (next, prev) => {
     if (
       JSON.stringify({
-        ...next,
+        ...next[0],
         current_region: null,
       }) !==
-      JSON.stringify({
-        ...prev,
-        current_region: null,
-      })
+        JSON.stringify({
+          ...prev[0],
+          current_region: null,
+        }) ||
+      next[1] !== prev[1]
     ) {
       const data = await fillMatrix();
       chart.data = data;

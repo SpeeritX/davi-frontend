@@ -31,6 +31,7 @@
         id="matrix"
         :filters="state.filters"
         :dates="state.dates"
+        :current_region="state.current_region"
         @update-regions="updateRegions"
       />
       <ParallelSets
