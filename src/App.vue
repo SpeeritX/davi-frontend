@@ -67,7 +67,8 @@ h2 {
   color: var(--primary-color);
   font-weight: 400;
   width: 100%;
-  padding-bottom: 0.5rem;
+  padding: 0.8rem 0;
+  margin: 0;
   border-bottom: 1px solid #dadada;
 }
 </style>

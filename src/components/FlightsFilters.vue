@@ -160,7 +160,7 @@ export default {
 
 .filters-container {
   height: 100%;
-  padding: 0.5rem;
+  padding: 0.8rem;
   box-sizing: border-box;
   background-color: #f8f8f8;
   box-shadow: 0px 0px 6px rgb(153, 153, 153);

@@ -10,7 +10,7 @@
       <div id="flights-container">
         <FlightsMap
           id="flights-map"
-          :filters="state.filters"
+          :filters="filtersWithParallelSets"
           :dates="state.dates"
           :region="state.current_region"
           :shortestPaths="state.shortestPaths"
@@ -29,7 +29,7 @@
     <div id="sidebar">
       <MatrixChart
         id="matrix"
-        :filters="state.filters"
+        :filters="filtersWithParallelSets"
         :dates="state.dates"
         :current_region="state.current_region"
         @update-regions="updateRegions"
@@ -39,6 +39,7 @@
         :filters="state.filters"
         :dates="state.dates"
         :region="state.current_region"
+        @updateFilters="updateParallelSetsFilters"
       />
     </div>
   </div>
@@ -68,6 +69,7 @@ export default {
       },
       state: {
         filters: {},
+        parallelSetsFilters: {},
         dates: {
           date_1: "2022-02-23",
           date_2: "2022-02-23",
@@ -82,6 +84,11 @@ export default {
   async mounted() {
     await this.fetchFlightsCount();
   },
+  computed: {
+    filtersWithParallelSets() {
+      return { ...this.state.filters, ...this.state.parallelSetsFilters };
+    },
+  },
   methods: {
     async updateDates(dates) {
       this.state.dates = {
@@ -93,15 +100,22 @@ export default {
       this.state.current_region = regions;
       await this.fetchFlightsCount();
     },
-    async updateFilters(newFilters) {
-      this.state.filters = {
+    async updateParallelSetsFilters(newFilters) {
+      this.state.parallelSetsFilters = {
         ...newFilters,
       };
       await this.fetchFlightsCount();
     },
+    async updateFilters(newFilters) {
+      this.state.filters = {
+        ...newFilters,
+      };
+      this.state.parallelSetsFilters = {};
+      await this.fetchFlightsCount();
+    },
     async fetchFlightsCount() {
       const response = await FlightsService.getFlightsCount({
-        ...this.state.filters,
+        ...this.filtersWithParallelSets,
         current_region: this.state.current_region,
         date_1: this.data.minDate,
         date_2: this.data.maxDate,
