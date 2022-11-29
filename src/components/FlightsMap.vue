@@ -53,8 +53,8 @@ export default {
       maxZoom: 11,
       minZoom: 6,
       maxBounds: [
-        [54, 40],
-        [41, 20],
+        [54, 41],
+        [41.3, 20.7],
       ],
       maxBoundsViscosity: 1,
     }).setView([50.45, 30.52], 6.3);
@@ -96,14 +96,12 @@ export default {
   methods: {
     async updateFlights() {
       this.flightsLayers?.clearLayers();
-      if (this.region) {
-        (
-          await updateFlightPaths(
-            { ...this.filters, ...this.dates, current_region: this.region },
-            this.shortestPaths
-          )
-        ).addTo(this.flightsLayers);
-      }
+      (
+        await updateFlightPaths(
+          { ...this.filters, ...this.dates, current_region: this.region },
+          this.shortestPaths
+        )
+      ).addTo(this.flightsLayers);
     },
     async updateRegions() {
       this.loading = true;

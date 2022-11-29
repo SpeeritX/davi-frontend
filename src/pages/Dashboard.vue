@@ -18,7 +18,6 @@
         />
       </div>
       <DateSlider
-        v-if="state.flightsCount.length"
         id="timeline"
         @update-dates="updateDates"
         :minDate="data.minDate"
@@ -143,7 +142,7 @@ export default {
 
 #main-content {
   height: 100%;
-  flex: 6 0 0;
+  flex: 10 0 0;
   display: flex;
   flex-direction: column;
   padding-top: 0.5rem;
@@ -157,7 +156,7 @@ export default {
 }
 
 #filters {
-  flex: 1 1 0;
+  flex: 2 1 0;
   margin-right: 0.5rem;
 }
 
@@ -171,7 +170,7 @@ export default {
 
 #sidebar {
   height: 100%;
-  flex: 4 0 0;
+  flex: 8 0 0;
   display: flex;
   flex-direction: column;
   padding: 0.5rem;
