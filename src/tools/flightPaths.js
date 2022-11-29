@@ -24,7 +24,12 @@ const splitFlightLine = (path) => {
   return splittedPaths;
 };
 
-const updateFlightPaths = async (filters, shortestPaths) => {
+const updateFlightPaths = async (
+  filters,
+  shortestPaths,
+  showFlightPaths,
+  pathsOpacity
+) => {
   const flights = await fetchFlights(filters);
   const layers = L.layerGroup([], { pane: "flights" });
 
@@ -35,7 +40,7 @@ const updateFlightPaths = async (filters, shortestPaths) => {
       );
       layers.addLayer(
         L.polyline([positions[0], positions[positions.length - 1]], {
-          opacity: 0.3,
+          opacity: pathsOpacity / 100,
           color: "black",
           weight: 1,
           pane: "flights",
@@ -43,24 +48,25 @@ const updateFlightPaths = async (filters, shortestPaths) => {
       );
     });
   }
-
-  flights.forEach((flight) => {
-    const positions = JSON.parse(
-      flight["latitude, longitude"].replaceAll("'", '"')
-    );
-    const lines = splitFlightLine(positions);
-
-    lines.map((path) => {
-      layers.addLayer(
-        L.polyline(path, {
-          opacity: 0.3,
-          color: "#7c009b", //#c51b8a //#7e68af
-          weight: 1,
-          pane: "flights",
-        })
+  if (showFlightPaths) {
+    flights.forEach((flight) => {
+      const positions = JSON.parse(
+        flight["latitude, longitude"].replaceAll("'", '"')
       );
+      const lines = splitFlightLine(positions);
+
+      lines.map((path) => {
+        layers.addLayer(
+          L.polyline(path, {
+            opacity: pathsOpacity / 100,
+            color: "#7c009b", //#c51b8a //#7e68af
+            weight: 1,
+            pane: "flights",
+          })
+        );
+      });
     });
-  });
+  }
   return layers;
 };
 export default updateFlightPaths;

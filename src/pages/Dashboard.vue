@@ -5,6 +5,8 @@
       @update-filters="updateFilters"
       @update-shortest-paths="(val) => (this.state.shortestPaths = val)"
       @update-choropleth-map="(val) => (this.state.choroplethMap = val)"
+      @update-show-flight-paths="(val) => (this.state.showFlightPaths = val)"
+      @update-paths-opacity="(val) => (this.state.pathsOpacity = val)"
     />
     <div id="main-content">
       <div id="flights-container">
@@ -14,7 +16,9 @@
           :dates="state.dates"
           :region="state.current_region"
           :shortestPaths="state.shortestPaths"
+          :showFlightPaths="state.showFlightPaths"
           :choroplethMap="state.choroplethMap"
+          :pathsOpacity="state.pathsOpacity"
           :numberOfFlights="numberOfFlights"
         />
       </div>
@@ -78,6 +82,8 @@ export default {
         flightsCount: [],
         shortestPaths: false,
         choroplethMap: true,
+        showFlightPaths: true,
+        pathsOpacity: 20,
       },
     };
   },

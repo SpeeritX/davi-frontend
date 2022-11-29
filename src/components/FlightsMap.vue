@@ -16,9 +16,11 @@
       >
         <MapLegend
           :maxNumberOfFlights="maxRegionValue"
+          :showFlightPaths="showFlightPaths"
           :showFlights="showFlights"
           :showShortestPaths="shortestPaths"
           :showChoroplethMap="choroplethMap"
+          :numberOfFlights="numberOfFlights"
         />
       </div>
     </div>
@@ -43,7 +45,9 @@ export default {
     "region",
     "dates",
     "shortestPaths",
+    "showFlightPaths",
     "choroplethMap",
+    "pathsOpacity",
     "numberOfFlights",
   ],
   components: { MapLegend },
@@ -99,6 +103,12 @@ export default {
     async shortestPaths() {
       await this.updateFlights();
     },
+    async showFlightPaths() {
+      await this.updateFlights();
+    },
+    async pathsOpacity() {
+      await this.updateFlights();
+    },
     async filters() {
       await this.updateRegions();
       await this.updateFlights();
@@ -123,11 +133,13 @@ export default {
   methods: {
     async updateFlights() {
       this.flightsLayers?.clearLayers();
-      if (this.showFlights) {
+      if (this.showFlights && (this.shortestPaths || this.showFlightPaths)) {
         (
           await updateFlightPaths(
             { ...this.filters, ...this.dates, current_region: this.region },
-            this.shortestPaths
+            this.shortestPaths,
+            this.showFlightPaths,
+            this.pathsOpacity
           )
         ).addTo(this.flightsLayers);
       }

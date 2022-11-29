@@ -1,10 +1,13 @@
 <template>
   <div class="legend">
-    <p v-if="!showFlights">
+    <p class="choropleth-map-header number-of-flights">
+      Flights in total: <strong>{{ numberOfFlights }}</strong>
+    </p>
+    <p v-if="!showFlights" class="warning">
       Too many flights to display flight paths. Try applying filters to reduce
       them.
     </p>
-    <div v-if="showFlights" class="element element-line">
+    <div v-if="showFlights && showFlightPaths" class="element element-line">
       <div class="line line-1" />
       <p>Flight path</p>
     </div>
@@ -42,9 +45,11 @@ export default {
   name: "MapLegend",
   props: [
     "maxNumberOfFlights",
-    "showFlights",
+    "showFlightPaths",
     "showShortestPaths",
     "showChoroplethMap",
+    "showFlights",
+    "numberOfFlights",
   ],
   computed: {
     dataClasses() {
@@ -128,6 +133,14 @@ export default {
   border-bottom: 1px solid white;
 
   background-color: #f0f0f0;
+}
+.warning {
+  color: rgb(200, 0, 0);
+  font-weight: 600;
+}
+.number-of-flights {
+  margin-top: 0;
+  margin-bottom: 0.5rem;
 }
 </style>
   
