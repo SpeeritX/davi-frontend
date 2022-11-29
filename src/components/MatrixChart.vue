@@ -1,6 +1,7 @@
 <template>
-  <div>
+  <div class="matrix-container">
     <canvas class="matrix-chart" ref="matrixChart"></canvas>
+    <div id="matrix-legend"></div>
   </div>
 </template>
 
@@ -19,9 +20,34 @@ const props = defineProps({
   dates: Object,
   current_region: String,
 });
+const minValue = ref(0);
+const maxValue = ref(0);
 const emit = defineEmits(["updateRegions"]);
 
 let chart;
+
+const htmlLegendPlugin = {
+  id: "matrix-legend",
+  afterUpdate() {
+    const legendContainer = document.getElementById("matrix-legend");
+    legendContainer.innerHTML = "";
+    const scale = document.createElement("div");
+    scale.style.height = "0.8rem";
+    scale.style.flex = "1";
+    scale.style.marginInline = "4px";
+    const percent =
+      (100 * Math.abs(maxValue.value)) / (maxValue.value - minValue.value);
+    scale.style.background =
+      "linear-gradient(to left, #d8b365, #f5f5f5 " + percent + "%, #5ab4ac)";
+    const labelMin = document.createElement("div");
+    labelMin.innerHTML = Math.round(minValue.value);
+    const labelMax = document.createElement("div");
+    labelMax.innerHTML = Math.round(maxValue.value);
+    legendContainer.appendChild(labelMin);
+    legendContainer.appendChild(scale);
+    legendContainer.appendChild(labelMax);
+  },
+};
 
 const matrixChart = ref(null);
 const fillMatrix = async () => {
@@ -31,16 +57,15 @@ const fillMatrix = async () => {
     current_region: null,
   });
   const matrixData = response.data;
-  let maxVal = 0;
-  let minVal = 0;
+  maxValue.value = 0;
+  minValue.value = 0;
   const regions = new Set();
   matrixData.data.map(({ x, y, v }) => {
-    if (v > maxVal) maxVal = v;
-    if (v < minVal) minVal = v;
+    if (v > maxValue.value) maxValue.value = v;
+    if (v < minValue.value) minValue.value = v;
     regions.add(x);
     regions.add(y);
   });
-  console.log(minVal, maxVal);
   const data = {
     datasets: [
       {
@@ -50,9 +75,10 @@ const fillMatrix = async () => {
           const value = context.dataset.data[context.dataIndex].v;
           const convert = (val) =>
             Math.floor(
-              255 -
-                (255 - val) *
-                  (Math.abs(value) / (value > 0 ? maxVal : Math.abs(minVal)))
+              245 -
+                (245 - val) *
+                  (Math.abs(value) /
+                    (value > 0 ? maxValue.value : Math.abs(minValue.value)))
             );
           let color;
           if (value > 0)
@@ -92,6 +118,9 @@ onMounted(async () => {
     aspectRatio: 1,
     plugins: {
       legend: false,
+      htmlLegend: {
+        containerID: "matrix-legend",
+      },
       tooltip: {
         callbacks: {
           title() {
@@ -99,7 +128,12 @@ onMounted(async () => {
           },
           label(context) {
             const v = context.dataset.data[context.dataIndex];
-            return ["x: " + v.x, "y: " + v.y, "v: " + v.v];
+            return [
+              "Region 1: " + v.x,
+              "Region 2: " + v.y,
+              "Expected: " + Math.round((v.n === "null" ? 0 : v.n) - v.v),
+              "Flights: " + (v.n ?? 0),
+            ];
           },
         },
       },
@@ -120,6 +154,7 @@ onMounted(async () => {
     type: "matrix",
     data: data,
     options: options,
+    plugins: [htmlLegendPlugin],
   });
 });
 watch(
@@ -139,6 +174,36 @@ watch(
       const data = await fillMatrix();
       chart.data = data;
       chart?.update();
+    } else {
+      chart.data = {
+        ...chart.data,
+        datasets: {
+          ...chart.data.datasets,
+          backgroundColor(context) {
+            const value = context.dataset.data[context.dataIndex].v;
+            const convert = (val) =>
+              Math.floor(
+                245 -
+                  (245 - val) *
+                    (Math.abs(value) /
+                      (value > 0 ? maxValue.value : Math.abs(minValue.value)))
+              );
+            let color;
+            if (
+              next[0].current_region ===
+              `${context.dataset.data[context.dataIndex].x},${
+                context.dataset.data[context.dataIndex].y
+              }`
+            )
+              return "rgb(0,0,0)";
+            if (value > 0)
+              color = `rgb(${convert(216)},${convert(179)},${convert(101)})`;
+            else color = `rgb(${convert(90)},${convert(180)},${convert(172)})`;
+            return color;
+          },
+        },
+      };
+      chart?.update();
     }
   }
 );
@@ -147,7 +212,21 @@ watch(
 <style scoped>
 .matrix-chart {
   aspect-ratio: 1 / 1;
-  width: 100%;
+  flex: 1;
   border: 1px var(--border-color) solid;
+}
+#matrix-legend {
+  width: 80%;
+  height: 0.8rem;
+  display: flex;
+  flex-direction: row;
+  font-size: 0.8rem;
+}
+.matrix-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
 }
 </style>
