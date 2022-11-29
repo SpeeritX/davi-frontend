@@ -1,32 +1,38 @@
 <template>
   <div class="legend">
-    <div class="element element-line">
+    <p v-if="!showFlights">
+      Too many flights to display flight paths. Try applying filters to reduce
+      them.
+    </p>
+    <div v-if="showFlights" class="element element-line">
       <div class="line line-1" />
       <p>Flight path</p>
     </div>
-    <div class="element element-line">
+    <div v-if="showFlights && showShortestPaths" class="element element-line">
       <div class="line line-2" />
       <p>
         The shortest connection between the starting and ending points of the
         flight path
       </p>
     </div>
-    <p class="choropleth-map-header">Number of flights</p>
-    <div class="element element-region">
-      <div class="region region-1" />
-      <p>{{ dataClasses[0].start }} - {{ dataClasses[0].end }}</p>
-    </div>
-    <div class="element element-region">
-      <div class="region region-2" />
-      <p>{{ dataClasses[1].start }} - {{ dataClasses[1].end }}</p>
-    </div>
-    <div class="element element-region">
-      <div class="region region-3" />
-      <p>{{ dataClasses[2].start }} - {{ dataClasses[2].end }}</p>
-    </div>
-    <div class="element element-region">
-      <div class="region region-4" />
-      <p>0</p>
+    <div v-if="showChoroplethMap">
+      <p class="choropleth-map-header">Number of flights</p>
+      <div class="element element-region">
+        <div class="region region-1" />
+        <p>{{ dataClasses[0].start }} - {{ dataClasses[0].end }}</p>
+      </div>
+      <div class="element element-region">
+        <div class="region region-2" />
+        <p>{{ dataClasses[1].start }} - {{ dataClasses[1].end }}</p>
+      </div>
+      <div class="element element-region">
+        <div class="region region-3" />
+        <p>{{ dataClasses[2].start }} - {{ dataClasses[2].end }}</p>
+      </div>
+      <div class="element element-region">
+        <div class="region region-4" />
+        <p>0</p>
+      </div>
     </div>
   </div>
 </template>
@@ -34,7 +40,12 @@
   <script>
 export default {
   name: "MapLegend",
-  props: ["maxNumberOfFlights"],
+  props: [
+    "maxNumberOfFlights",
+    "showFlights",
+    "showShortestPaths",
+    "showChoroplethMap",
+  ],
   computed: {
     dataClasses() {
       return [
@@ -63,6 +74,8 @@ export default {
   flex-direction: column;
   align-items: flex-start;
   color: black;
+  font-size: 0.8rem;
+  text-align: left;
 }
 
 .line {
@@ -90,8 +103,6 @@ export default {
   flex-direction: row;
   justify-content: flex-start;
   align-items: center;
-  font-size: 0.8rem;
-  text-align: left;
 }
 .element-line p {
   margin: 0.2rem 0;

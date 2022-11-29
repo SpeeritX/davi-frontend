@@ -7,8 +7,19 @@
       }"
     ></div>
     <div class="legend-anchor">
-      <div class="map-legend-container">
-        <MapLegend :maxNumberOfFlights="maxRegionValue" />
+      <div
+        class="map-legend-container"
+        ref="mapLegendContainer"
+        v-bind:style="{
+          bottom: `${legendHeight + 2}px`,
+        }"
+      >
+        <MapLegend
+          :maxNumberOfFlights="maxRegionValue"
+          :showFlights="showFlights"
+          :showShortestPaths="shortestPaths"
+          :showChoroplethMap="choroplethMap"
+        />
       </div>
     </div>
   </div>
@@ -27,7 +38,14 @@ import MapLegend from "./MapLegend";
 
 export default {
   name: "FlightsMap",
-  props: ["filters", "region", "dates", "shortestPaths", "choroplethMap"],
+  props: [
+    "filters",
+    "region",
+    "dates",
+    "shortestPaths",
+    "choroplethMap",
+    "numberOfFlights",
+  ],
   components: { MapLegend },
   data() {
     return {
@@ -36,6 +54,7 @@ export default {
       regionLayers: null,
       loading: true,
       maxRegionValue: 0,
+      legendHeight: 147,
     };
   },
   async mounted() {
@@ -73,6 +92,9 @@ export default {
     await this.updateFlights();
     this.loading = false;
   },
+  updated() {
+    this.calculateLegendHeight();
+  },
   watch: {
     async shortestPaths() {
       await this.updateFlights();
@@ -93,15 +115,22 @@ export default {
       await this.updateRegions();
     },
   },
+  computed: {
+    showFlights() {
+      return this.numberOfFlights < 5000;
+    },
+  },
   methods: {
     async updateFlights() {
       this.flightsLayers?.clearLayers();
-      (
-        await updateFlightPaths(
-          { ...this.filters, ...this.dates, current_region: this.region },
-          this.shortestPaths
-        )
-      ).addTo(this.flightsLayers);
+      if (this.showFlights) {
+        (
+          await updateFlightPaths(
+            { ...this.filters, ...this.dates, current_region: this.region },
+            this.shortestPaths
+          )
+        ).addTo(this.flightsLayers);
+      }
     },
     async updateRegions() {
       this.loading = true;
@@ -125,6 +154,9 @@ export default {
       ).addTo(this.regionLayers);
       this.loading = false;
     },
+    calculateLegendHeight() {
+      this.legendHeight = this.$refs.mapLegendContainer.clientHeight;
+    },
   },
 };
 </script>
@@ -147,10 +179,10 @@ export default {
 
 .map-legend-container {
   padding: 0.8rem;
-  height: 13rem;
+  height: fit-content;
   width: 12rem;
   position: relative;
-  bottom: calc(13rem + 1px);
+  right: -1px;
   background-color: white;
   z-index: 999;
   box-sizing: border-box;
