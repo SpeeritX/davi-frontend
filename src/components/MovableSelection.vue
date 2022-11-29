@@ -87,12 +87,12 @@ export default {
 }
 
 .movable-selection {
-  height: 44px;
-  top: -62px;
+  height: 42px;
+  top: -61px;
   position: relative;
-  border: 2px solid var(--primary-color);
+  border: 1px solid var(--primary-color);
+  box-shadow: 0 0 3px black;
   box-sizing: border-box;
-  box-shadow: none;
   cursor: pointer;
 }
 </style>
