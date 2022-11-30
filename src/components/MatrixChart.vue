@@ -42,9 +42,9 @@ const htmlLegendPlugin = {
     scale.style.background =
       "linear-gradient(to left, #d8b365, #f5f5f5 " + percent + "%, #5ab4ac)";
     const labelMin = document.createElement("div");
-    labelMin.innerHTML = Math.round(minValue.value);
+    labelMin.innerHTML = Math.round(minValue.value * 100) / 100;
     const labelMax = document.createElement("div");
-    labelMax.innerHTML = Math.round(maxValue.value);
+    labelMax.innerHTML = Math.round(maxValue.value * 100) / 100;
     legendContainer.appendChild(labelMin);
     legendContainer.appendChild(scale);
     legendContainer.appendChild(labelMax);
@@ -124,6 +124,7 @@ onMounted(async () => {
         emit("updateRegions", undefined);
         return;
       }
+      console.log(item);
       emit("updateRegions", `${item.x},${item.y}`);
     },
     aspectRatio: 1,
@@ -146,6 +147,17 @@ onMounted(async () => {
               "Flights: " + (v.absolute ?? 0),
             ];
           },
+        },
+      },
+      zoom: {
+        zoom: {
+          wheel: {
+            enabled: true,
+          },
+          pinch: {
+            enabled: true,
+          },
+          mode: "xy",
         },
       },
     },
