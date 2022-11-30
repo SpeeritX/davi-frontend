@@ -177,7 +177,7 @@ export default {
   box-sizing: border-box;
 }
 #matrix {
-  flex: 3 0 0;
+  flex: 9 0 0;
 }
 #parallel {
   flex: 3 0 0;

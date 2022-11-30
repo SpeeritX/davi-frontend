@@ -81,7 +81,14 @@ const fillMatrix = async () => {
                     (value > 0 ? maxValue.value : Math.abs(minValue.value)))
             );
           let color;
-          if (value > 0)
+          if (
+            context.dataset.data[context.dataIndex].x +
+              "," +
+              context.dataset.data[context.dataIndex].y ===
+            props.current_region
+          )
+            color = "rgb(0,0,0)";
+          else if (value > 0)
             color = `rgb(${convert(216)},${convert(179)},${convert(101)})`;
           else color = `rgb(${convert(90)},${convert(180)},${convert(172)})`;
           return color;
@@ -158,53 +165,13 @@ onMounted(async () => {
   });
 });
 watch(
-  () => [props.filters, props.dates],
-  async (next, prev) => {
-    if (
-      JSON.stringify({
-        ...next[0],
-        current_region: null,
-      }) !==
-        JSON.stringify({
-          ...prev[0],
-          current_region: null,
-        }) ||
-      next[1] !== prev[1]
-    ) {
+  () => [props.filters, props.dates, props.current_region],
+  async () => {
+    setTimeout(async () => {
       const data = await fillMatrix();
       chart.data = data;
       chart?.update();
-    } else {
-      chart.data = {
-        ...chart.data,
-        datasets: {
-          ...chart.data.datasets,
-          backgroundColor(context) {
-            const value = context.dataset.data[context.dataIndex].v;
-            const convert = (val) =>
-              Math.floor(
-                245 -
-                  (245 - val) *
-                    (Math.abs(value) /
-                      (value > 0 ? maxValue.value : Math.abs(minValue.value)))
-              );
-            let color;
-            if (
-              next[0].current_region ===
-              `${context.dataset.data[context.dataIndex].x},${
-                context.dataset.data[context.dataIndex].y
-              }`
-            )
-              return "rgb(0,0,0)";
-            if (value > 0)
-              color = `rgb(${convert(216)},${convert(179)},${convert(101)})`;
-            else color = `rgb(${convert(90)},${convert(180)},${convert(172)})`;
-            return color;
-          },
-        },
-      };
-      chart?.update();
-    }
+    });
   }
 );
 </script>
