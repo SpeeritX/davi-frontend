@@ -12,6 +12,8 @@ import { MatrixController, MatrixElement } from "chartjs-chart-matrix";
 import zoomPlugin from "chartjs-plugin-zoom";
 import matrixService from "@/services/matrixService";
 
+const midpoint = 0;
+
 Chart.register(MatrixController, MatrixElement);
 Chart.register(zoomPlugin);
 
@@ -50,15 +52,15 @@ const htmlLegendPlugin = {
 };
 
 const matrixChart = ref(null);
-const fillMatrix = async () => {
+const fillMatrix = async (current_region) => {
   const response = await matrixService.getExpectedMatrix({
     ...props.filters,
     ...props.dates,
     current_region: null,
   });
   const matrixData = response.data;
-  maxValue.value = 0;
-  minValue.value = 0;
+  maxValue.value = midpoint;
+  minValue.value = midpoint;
   const regions = new Set();
   matrixData.data.map(({ x, y, v }) => {
     if (v > maxValue.value) maxValue.value = v;
@@ -77,18 +79,20 @@ const fillMatrix = async () => {
             Math.floor(
               245 -
                 (245 - val) *
-                  (Math.abs(value) /
-                    (value > 0 ? maxValue.value : Math.abs(minValue.value)))
+                  (Math.abs(value - midpoint) /
+                    (value > midpoint
+                      ? maxValue.value
+                      : Math.abs(minValue.value - midpoint)))
             );
           let color;
           if (
             context.dataset.data[context.dataIndex].x +
               "," +
               context.dataset.data[context.dataIndex].y ===
-            props.current_region
+            current_region
           )
             color = "rgb(0,0,0)";
-          else if (value > 0)
+          else if (value > midpoint)
             color = `rgb(${convert(216)},${convert(179)},${convert(101)})`;
           else color = `rgb(${convert(90)},${convert(180)},${convert(172)})`;
           return color;
@@ -115,11 +119,11 @@ onMounted(async () => {
   const ctx = matrixChart.value.getContext("2d");
   const options = {
     onClick: (e, e2) => {
-      if (props.current_region) {
+      const item = data.datasets[0].data[e2[0]?.index];
+      if (props.current_region === `${item.x},${item.y}`) {
         emit("updateRegions", undefined);
         return;
       }
-      const item = data.datasets[0].data[e2[0]?.index];
       emit("updateRegions", `${item.x},${item.y}`);
     },
     aspectRatio: 1,
@@ -138,8 +142,8 @@ onMounted(async () => {
             return [
               "Region 1: " + v.x,
               "Region 2: " + v.y,
-              "Expected: " + Math.round((v.n === "null" ? 0 : v.n) - v.v),
-              "Flights: " + (v.n ?? 0),
+              "Expected: " + Math.round(v.expected * 100) / 100,
+              "Flights: " + (v.absolute ?? 0),
             ];
           },
         },
@@ -166,12 +170,10 @@ onMounted(async () => {
 });
 watch(
   () => [props.filters, props.dates, props.current_region],
-  async () => {
-    setTimeout(async () => {
-      const data = await fillMatrix();
-      chart.data = data;
-      chart?.update();
-    });
+  async (next) => {
+    const data = await fillMatrix(next[2]);
+    chart.data = data;
+    chart?.update();
   }
 );
 </script>
