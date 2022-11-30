@@ -69,7 +69,7 @@
       <SliderInput
         id="pathsOpacity"
         :initValue="state.pathsOpacity"
-        :label="`Paths opacity: ${state.pathsOpacity / 100}`"
+        :label="`Flights paths opacity: ${state.pathsOpacity / 100}`"
         @update-value="(value) => updateFilter('pathsOpacity', value)"
       />
       <CheckboxInput
@@ -82,7 +82,7 @@
         id="showFlightPaths"
         :initValue="state.showFlightPaths"
         @update-value="(value) => updateFilter('showFlightPaths', value)"
-        label="Show paths of the flights"
+        label="Show flights paths"
       />
       <CheckboxInput
         id="shortestPaths"

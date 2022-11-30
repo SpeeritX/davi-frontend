@@ -20,6 +20,9 @@
           :choroplethMap="state.choroplethMap"
           :pathsOpacity="state.pathsOpacity"
           :numberOfFlights="numberOfFlights"
+          :selectedRegions="
+            state.current_region ? state.current_region.split(',') : []
+          "
         />
       </div>
       <DateSlider
@@ -98,19 +101,15 @@ export default {
       if (this.state.flightsCount.length === 0) return 0;
 
       const baseDate = new Date(this.data.minDate + " 02:00:00");
-      console.log(baseDate, this.state.dates.date_1);
-
       const startIndex = Math.round(
         (new Date(this.state.dates.date_1) - baseDate) / (24 * 3600 * 1000)
       );
       const endIndex = Math.round(
         (new Date(this.state.dates.date_2) - baseDate) / (24 * 3600 * 1000)
       );
-      console.log(startIndex, endIndex);
       const count = this.state.flightsCount
         .slice(startIndex, endIndex + 1)
         .reduce((a, b) => a + b);
-      console.log(count);
       return count;
     },
   },

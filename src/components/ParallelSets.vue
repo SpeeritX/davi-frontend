@@ -88,7 +88,6 @@ const getData = async (filters, dates, region) => {
   var gd = document.getElementById("parallel-sets");
 
   var update_color = (points_data) => {
-    console.log(points_data);
     const newFilters = {
       spi: points_data.constraints[0],
       squawk: points_data.constraints[1],
@@ -119,7 +118,6 @@ watch(
   () => [props.filters, props.dates, props.region],
   async (value) => {
     appliedFilters.value = null;
-    console.log(value);
     await getData(value[0], value[1], value[2]);
   }
 );

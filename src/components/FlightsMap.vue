@@ -49,6 +49,7 @@ export default {
     "choroplethMap",
     "pathsOpacity",
     "numberOfFlights",
+    "selectedRegions",
   ],
   components: { MapLegend },
   data() {
@@ -58,7 +59,7 @@ export default {
       regionLayers: null,
       loading: true,
       maxRegionValue: 0,
-      legendHeight: 147,
+      legendHeight: 173,
     };
   },
   async mounted() {
@@ -164,7 +165,41 @@ export default {
           this.choroplethMap
         )
       ).addTo(this.regionLayers);
+      this.highlightSelectedRegions(this.selectedRegions);
       this.loading = false;
+    },
+    highlightSelectedRegions(regions) {
+      console.log(regions);
+
+      regions?.forEach((region) => {
+        console.log(region);
+        this.updateRegionStyle(region, {
+          color: "mediumseagreen",
+          weight: 3,
+          dashArray: "",
+        });
+      });
+    },
+    updateRegionStyle(regionName, style) {
+      this.regionLayers.eachLayer(function (parentLayer) {
+        parentLayer.eachLayer(function (layer) {
+          if (layer.id === regionName) {
+            console.log("apply style for ", regionName);
+            layer.setStyle(style);
+            layer.bringToFront();
+          }
+        });
+      });
+    },
+    resetRegionStyle(regionName) {
+      this.regionLayers.eachLayer(function (parentLayer) {
+        parentLayer.eachLayer(function (layer) {
+          if (layer.id === regionName) {
+            console.log("reset style for ", regionName);
+            parentLayer.resetStyle(layer);
+          }
+        });
+      });
     },
     calculateLegendHeight() {
       this.legendHeight = this.$refs.mapLegendContainer.clientHeight;

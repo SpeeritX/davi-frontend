@@ -44,6 +44,7 @@ const updateFlightPaths = async (
           color: "black",
           weight: 1,
           pane: "flights",
+          interactive: false,
         })
       );
     });
@@ -62,6 +63,7 @@ const updateFlightPaths = async (
             color: "#7c009b", //#c51b8a //#7e68af
             weight: 1,
             pane: "flights",
+            interactive: false,
           })
         );
       });
