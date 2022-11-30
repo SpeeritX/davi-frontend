@@ -50,10 +50,16 @@ const styleRegion = (region, matrixData, maxValue, choropleth) => {
 //   });
 // };
 
+const onEachRegion = (region, layer) => {
+  layer.on({
+    add: (e) => (e.target.id = region.properties.name),
+  });
+};
+
 const updateRegionMap = async (matrixData, maxValue, stateData, choropleth) => {
   geojson = L.geoJson(stateData, {
     style: (e) => styleRegion(e, matrixData, maxValue, choropleth),
-    // onEachFeature: onEachRegion,
+    onEachFeature: onEachRegion,
     pane: "regions",
   });
   return geojson;

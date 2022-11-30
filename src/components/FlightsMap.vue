@@ -7,8 +7,21 @@
       }"
     ></div>
     <div class="legend-anchor">
-      <div class="map-legend-container">
-        <MapLegend :maxNumberOfFlights="maxRegionValue" />
+      <div
+        class="map-legend-container"
+        ref="mapLegendContainer"
+        v-bind:style="{
+          bottom: `${legendHeight + 2}px`,
+        }"
+      >
+        <MapLegend
+          :maxNumberOfFlights="maxRegionValue"
+          :showFlightPaths="showFlightPaths"
+          :showFlights="showFlights"
+          :showShortestPaths="shortestPaths"
+          :showChoroplethMap="choroplethMap"
+          :numberOfFlights="numberOfFlights"
+        />
       </div>
     </div>
   </div>
@@ -27,7 +40,17 @@ import MapLegend from "./MapLegend";
 
 export default {
   name: "FlightsMap",
-  props: ["filters", "region", "dates", "shortestPaths", "choroplethMap"],
+  props: [
+    "filters",
+    "region",
+    "dates",
+    "shortestPaths",
+    "showFlightPaths",
+    "choroplethMap",
+    "pathsOpacity",
+    "numberOfFlights",
+    "selectedRegions",
+  ],
   components: { MapLegend },
   data() {
     return {
@@ -36,6 +59,7 @@ export default {
       regionLayers: null,
       loading: true,
       maxRegionValue: 0,
+      legendHeight: 173,
     };
   },
   async mounted() {
@@ -73,8 +97,17 @@ export default {
     await this.updateFlights();
     this.loading = false;
   },
+  updated() {
+    this.calculateLegendHeight();
+  },
   watch: {
     async shortestPaths() {
+      await this.updateFlights();
+    },
+    async showFlightPaths() {
+      await this.updateFlights();
+    },
+    async pathsOpacity() {
       await this.updateFlights();
     },
     async filters() {
@@ -93,15 +126,24 @@ export default {
       await this.updateRegions();
     },
   },
+  computed: {
+    showFlights() {
+      return this.numberOfFlights < 5000;
+    },
+  },
   methods: {
     async updateFlights() {
       this.flightsLayers?.clearLayers();
-      (
-        await updateFlightPaths(
-          { ...this.filters, ...this.dates, current_region: this.region },
-          this.shortestPaths
-        )
-      ).addTo(this.flightsLayers);
+      if (this.showFlights && (this.shortestPaths || this.showFlightPaths)) {
+        (
+          await updateFlightPaths(
+            { ...this.filters, ...this.dates, current_region: this.region },
+            this.shortestPaths,
+            this.showFlightPaths,
+            this.pathsOpacity
+          )
+        ).addTo(this.flightsLayers);
+      }
     },
     async updateRegions() {
       this.loading = true;
@@ -123,7 +165,44 @@ export default {
           this.choroplethMap
         )
       ).addTo(this.regionLayers);
+      this.highlightSelectedRegions(this.selectedRegions);
       this.loading = false;
+    },
+    highlightSelectedRegions(regions) {
+      console.log(regions);
+
+      regions?.forEach((region) => {
+        console.log(region);
+        this.updateRegionStyle(region, {
+          color: "mediumseagreen",
+          weight: 3,
+          dashArray: "",
+        });
+      });
+    },
+    updateRegionStyle(regionName, style) {
+      this.regionLayers.eachLayer(function (parentLayer) {
+        parentLayer.eachLayer(function (layer) {
+          if (layer.id === regionName) {
+            console.log("apply style for ", regionName);
+            layer.setStyle(style);
+            layer.bringToFront();
+          }
+        });
+      });
+    },
+    resetRegionStyle(regionName) {
+      this.regionLayers.eachLayer(function (parentLayer) {
+        parentLayer.eachLayer(function (layer) {
+          if (layer.id === regionName) {
+            console.log("reset style for ", regionName);
+            parentLayer.resetStyle(layer);
+          }
+        });
+      });
+    },
+    calculateLegendHeight() {
+      this.legendHeight = this.$refs.mapLegendContainer.clientHeight;
     },
   },
 };
@@ -147,10 +226,10 @@ export default {
 
 .map-legend-container {
   padding: 0.8rem;
-  height: 13rem;
+  height: fit-content;
   width: 12rem;
   position: relative;
-  bottom: calc(13rem + 1px);
+  right: -1px;
   background-color: white;
   z-index: 999;
   box-sizing: border-box;

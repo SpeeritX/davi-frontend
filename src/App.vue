@@ -41,6 +41,7 @@ input:focus-visible {
 }
 .input-label {
   font-size: 0.9rem;
+  font-weight: 600;
   color: var(--primary-color);
   margin: 0.3rem 0;
   text-align: left;

@@ -16,6 +16,7 @@ const setCountryMap = (stateData) => {
   geojson = L.geoJson(stateData, {
     style: style,
     pane: "countries",
+    interactive: false,
   });
   return geojson;
 };

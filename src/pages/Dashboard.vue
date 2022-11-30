@@ -5,6 +5,8 @@
       @update-filters="updateFilters"
       @update-shortest-paths="(val) => (this.state.shortestPaths = val)"
       @update-choropleth-map="(val) => (this.state.choroplethMap = val)"
+      @update-show-flight-paths="(val) => (this.state.showFlightPaths = val)"
+      @update-paths-opacity="(val) => (this.state.pathsOpacity = val)"
     />
     <div id="main-content">
       <div id="flights-container">
@@ -14,7 +16,13 @@
           :dates="state.dates"
           :region="state.current_region"
           :shortestPaths="state.shortestPaths"
+          :showFlightPaths="state.showFlightPaths"
           :choroplethMap="state.choroplethMap"
+          :pathsOpacity="state.pathsOpacity"
+          :numberOfFlights="numberOfFlights"
+          :selectedRegions="
+            state.current_region ? state.current_region.split(',') : []
+          "
         />
       </div>
       <DateSlider
@@ -77,6 +85,8 @@ export default {
         flightsCount: [],
         shortestPaths: false,
         choroplethMap: true,
+        showFlightPaths: true,
+        pathsOpacity: 20,
       },
     };
   },
@@ -86,6 +96,21 @@ export default {
   computed: {
     filtersWithParallelSets() {
       return { ...this.state.filters, ...this.state.parallelSetsFilters };
+    },
+    numberOfFlights() {
+      if (this.state.flightsCount.length === 0) return 0;
+
+      const baseDate = new Date(this.data.minDate + " 02:00:00");
+      const startIndex = Math.round(
+        (new Date(this.state.dates.date_1) - baseDate) / (24 * 3600 * 1000)
+      );
+      const endIndex = Math.round(
+        (new Date(this.state.dates.date_2) - baseDate) / (24 * 3600 * 1000)
+      );
+      const count = this.state.flightsCount
+        .slice(startIndex, endIndex + 1)
+        .reduce((a, b) => a + b);
+      return count;
     },
   },
   methods: {

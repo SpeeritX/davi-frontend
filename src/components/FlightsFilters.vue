@@ -66,11 +66,23 @@
     />
     <div class="filter">
       <p class="input-label">Additional options</p>
+      <SliderInput
+        id="pathsOpacity"
+        :initValue="state.pathsOpacity"
+        :label="`Flights paths opacity: ${state.pathsOpacity / 100}`"
+        @update-value="(value) => updateFilter('pathsOpacity', value)"
+      />
       <CheckboxInput
         id="choroplethMap"
         :initValue="state.choroplethMap"
         @update-value="(value) => updateFilter('choroplethMap', value)"
         label="Show the choropleth map"
+      />
+      <CheckboxInput
+        id="showFlightPaths"
+        :initValue="state.showFlightPaths"
+        @update-value="(value) => updateFilter('showFlightPaths', value)"
+        label="Show flights paths"
       />
       <CheckboxInput
         id="shortestPaths"
@@ -87,6 +99,7 @@ import SmallInput from "./form/SmallInput";
 import MultiSelectInput from "./form/MultiSelectInput";
 import SelectInput from "./form/SelectInput";
 import CheckboxInput from "./form/CheckboxInput";
+import SliderInput from "./form/SliderInput";
 import { originCountries, currentCountries } from "../tools/countryList";
 
 export default {
@@ -96,9 +109,16 @@ export default {
     SelectInput,
     SmallInput,
     CheckboxInput,
+    SliderInput,
   },
   props: {},
-  emits: ["updateFilters", "updateShortestPaths", "updateChoroplethMap"],
+  emits: [
+    "updateFilters",
+    "updateShortestPaths",
+    "updateShowFlightPaths",
+    "updateChoroplethMap",
+    "updatePathsOpacity",
+  ],
   data() {
     return {
       data: {
@@ -119,14 +139,23 @@ export default {
         currentCountry: null,
         originCountry: null,
         shortestPaths: false,
+        showFlightPaths: true,
         choroplethMap: true,
+        pathsOpacity: 20,
       },
       filtersModified: false,
     };
   },
   methods: {
     updateFilter(filter, newValue) {
-      if (!["shortestPaths", "choroplethMap"].includes(filter)) {
+      if (
+        ![
+          "shortestPaths",
+          "showFlightPaths",
+          "choroplethMap",
+          "pathsOpacity",
+        ].includes(filter)
+      ) {
         this.filtersModified = true;
       }
       this.state[filter] = newValue;
@@ -136,13 +165,22 @@ export default {
         str.replace(/[A-Z]/g, (letter) => `_${letter.toLowerCase()}`);
       let query = {};
       Object.keys(this.state).forEach((key) => {
-        if (!["shortestPaths", "choroplethMap"].includes(key)) {
+        if (
+          ![
+            "shortestPaths",
+            "showFlightPaths",
+            "choroplethMap",
+            "pathsOpacity",
+          ].includes(key)
+        ) {
           const param = camelToSnakeCase(key);
           query[param] = this.state[key];
         }
       });
       this.$emit("updateShortestPaths", this.state.shortestPaths);
       this.$emit("updateChoroplethMap", this.state.choroplethMap);
+      this.$emit("updateShowFlightPaths", this.state.showFlightPaths);
+      this.$emit("updatePathsOpacity", this.state.pathsOpacity);
       if (this.filtersModified) {
         this.$emit("updateFilters", query);
       }
