@@ -134,6 +134,10 @@ onMounted(async () => {
     },
     aspectRatio: 1,
     plugins: {
+      title: {
+        display: true,
+        text: "Daily average difference compared to the whole date range",
+      },
       legend: false,
       htmlLegend: {
         containerID: "matrix-legend",
@@ -169,13 +173,57 @@ onMounted(async () => {
     scales: {
       x: {
         type: "category",
-        display: false,
-        labels: Object.keys(stateInCountry).sort((it) => stateInCountry[it]),
+        labels: Object.keys(stateInCountry).sort((a, b) => {
+          if (stateInCountry[a] < stateInCountry[b]) return -1;
+          if (stateInCountry[a] > stateInCountry[b]) return 1;
+          return 0;
+        }),
+        ticks: {
+          display: true,
+          callback: function (value, index) {
+            const countries = Object.keys(stateInCountry).sort((a, b) => {
+              if (stateInCountry[a] < stateInCountry[b]) return -1;
+              if (stateInCountry[a] > stateInCountry[b]) return 1;
+              return 0;
+            });
+            if (
+              index > 1 &&
+              stateInCountry[countries[index]] ===
+                stateInCountry[countries[index - 1]]
+            )
+              return;
+            return stateInCountry[countries[index]].substring(0, 2);
+          },
+        },
       },
       y: {
         type: "category",
-        display: false,
-        labels: Object.keys(stateInCountry).sort((it) => stateInCountry[it]),
+        labels: Object.keys(stateInCountry)
+          .sort((a, b) => {
+            if (stateInCountry[a] < stateInCountry[b]) return -1;
+            if (stateInCountry[a] > stateInCountry[b]) return 1;
+            return 0;
+          })
+          .reverse(),
+        ticks: {
+          display: true,
+          callback: function (value, index) {
+            const countries = Object.keys(stateInCountry)
+              .sort((a, b) => {
+                if (stateInCountry[a] < stateInCountry[b]) return -1;
+                if (stateInCountry[a] > stateInCountry[b]) return 1;
+                return 0;
+              })
+              .reverse();
+            if (
+              index > 1 &&
+              stateInCountry[countries[index]] ===
+                stateInCountry[countries[index - 1]]
+            )
+              return;
+            return stateInCountry[countries[index]].substring(0, 2);
+          },
+        },
       },
     },
   };
