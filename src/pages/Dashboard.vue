@@ -23,6 +23,7 @@
           :selectedRegions="
             state.current_region ? state.current_region.split(',') : []
           "
+          :hoveredRegions="state.hoveredRegions"
         />
       </div>
       <DateSlider
@@ -40,6 +41,7 @@
         :dates="state.dates"
         :current_region="state.current_region"
         @update-regions="updateRegions"
+        @update-hovered-regions="(val) => (state.hoveredRegions = val)"
       />
       <ParallelSets
         id="parallel"

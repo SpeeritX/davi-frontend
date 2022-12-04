@@ -24,7 +24,7 @@ const props = defineProps({
 });
 const minValue = ref(0);
 const maxValue = ref(0);
-const emit = defineEmits(["updateRegions"]);
+const emit = defineEmits(["updateRegions", "updateHoveredRegions"]);
 
 let chart;
 
@@ -127,6 +127,15 @@ onMounted(async () => {
       console.log(item);
       emit("updateRegions", `${item.x},${item.y}`);
     },
+    onHover: (e, e2) => {
+      const item = data.datasets[0].data[e2[0]?.index];
+      console.log(item);
+      if (item) {
+        emit("updateHoveredRegions", [item.x, item.y]);
+      } else {
+        emit("updateHoveredRegions", []);
+      }
+    },
     aspectRatio: 1,
     plugins: {
       legend: false,
@@ -172,12 +181,22 @@ onMounted(async () => {
       },
     },
   };
+  const mouseOutPlugin = {
+    id: "mouseOutPlugin",
+    beforeEvent(chart, args) {
+      const event = args.event;
+      if (event.type === "mouseout") {
+        console.log("mouse out");
+        emit("updateHoveredRegions", []);
+      }
+    },
+  };
   const data = await fillMatrix();
   chart = new Chart(ctx, {
     type: "matrix",
     data: data,
     options: options,
-    plugins: [htmlLegendPlugin],
+    plugins: [htmlLegendPlugin, mouseOutPlugin],
   });
 });
 watch(
