@@ -175,10 +175,12 @@ onMounted(async () => {
       x: {
         type: "category",
         display: false,
+        labels: Object.keys(stateInCountry).sort((it) => stateInCountry[it]),
       },
       y: {
         type: "category",
         display: false,
+        labels: Object.keys(stateInCountry).sort((it) => stateInCountry[it]),
       },
     },
   };
