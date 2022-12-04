@@ -53,12 +53,7 @@ const htmlLegendPlugin = {
 };
 
 const matrixChart = ref(null);
-const fillMatrix = async (current_region) => {
-  const response = await matrixService.getExpectedMatrix({
-    ...props.filters,
-    ...props.dates,
-    current_region: null,
-  });
+const fillMatrix = async (current_region, response) => {
   const matrixData = response.data;
   maxValue.value = midpoint;
   minValue.value = midpoint;
@@ -194,7 +189,12 @@ onMounted(async () => {
       }
     },
   };
-  const data = await fillMatrix();
+  response.value = await matrixService.getExpectedMatrix({
+    ...props.filters,
+    ...props.dates,
+    current_region: null,
+  });
+  const data = await fillMatrix(props.current_region, response.value);
   chart = new Chart(ctx, {
     type: "matrix",
     data: data,
@@ -202,10 +202,21 @@ onMounted(async () => {
     plugins: [htmlLegendPlugin, mouseOutPlugin],
   });
 });
+const response = ref(null);
 watch(
   () => [props.filters, props.dates, props.current_region],
-  async (next) => {
-    const data = await fillMatrix(next[2]);
+  async (next, prev) => {
+    if (
+      JSON.stringify([next[0], next[1]]) !== JSON.stringify([prev[0], prev[1]])
+    ) {
+      response.value = await matrixService.getExpectedMatrix({
+        ...props.filters,
+        ...props.dates,
+        current_region: null,
+      });
+    }
+
+    const data = await fillMatrix(next[2], response.value);
     chart.data = data;
     chart?.update();
   }
