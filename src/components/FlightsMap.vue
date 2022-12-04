@@ -50,6 +50,7 @@ export default {
     "pathsOpacity",
     "numberOfFlights",
     "selectedRegions",
+    "hoveredRegions",
   ],
   components: { MapLegend },
   data() {
@@ -124,6 +125,20 @@ export default {
     },
     async choroplethMap() {
       await this.updateRegions();
+    },
+    hoveredRegions(regions, oldRegions) {
+      console.log(regions);
+      oldRegions?.forEach((region) => {
+        this.resetRegionStyle(region);
+      });
+      regions?.forEach((region) => {
+        this.updateRegionStyle(region, {
+          color: "red",
+          weight: 3,
+          dashArray: "",
+        });
+      });
+      this.highlightSelectedRegions(this.selectedRegions);
     },
   },
   computed: {
