@@ -11,6 +11,7 @@ import { ref, onMounted, defineProps, defineEmits, watch } from "vue";
 import { MatrixController, MatrixElement } from "chartjs-chart-matrix";
 import zoomPlugin from "chartjs-plugin-zoom";
 import matrixService from "@/services/matrixService";
+import stateInCountry from "../assets/stateInCountry.json";
 
 const midpoint = 0;
 
@@ -141,8 +142,8 @@ onMounted(async () => {
           label(context) {
             const v = context.dataset.data[context.dataIndex];
             return [
-              "Region 1: " + v.x,
-              "Region 2: " + v.y,
+              "Region 1: " + v.x + ", " + stateInCountry[v.x],
+              "Region 2: " + v.y + ", " + stateInCountry[v.y],
               "Expected: " + Math.round(v.expected * 100) / 100,
               "Flights: " + (v.absolute ?? 0),
             ];
