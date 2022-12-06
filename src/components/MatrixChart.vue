@@ -10,16 +10,16 @@
           height: `${height + 5}px`,
         }"
       ></div>
-      <div class="marker-container">
-        <div
-          v-if="markerPosY !== null"
-          class="marker marker-y"
-          v-bind:style="{
-            top: `${markerPosY}px`,
-            width: `${width + 5}px`,
-          }"
-        ></div>
-      </div>
+    </div>
+    <div class="marker-container">
+      <div
+        v-if="markerPosY !== null"
+        class="marker marker-y"
+        v-bind:style="{
+          top: `${markerPosY}px`,
+          width: `${width + 5}px`,
+        }"
+      ></div>
     </div>
     <div class="matrix-container">
       <canvas class="matrix-chart" ref="matrixChart"></canvas>
@@ -157,7 +157,7 @@ const markerPosX = computed(() => {
     console.log(index);
     return cellWidth.value * index + 32;
   } else {
-    return null;
+    return 0;
   }
 });
 
@@ -170,9 +170,10 @@ const markerPosY = computed(() => {
     if (index === -1) return null;
     return cellHeight.value * index + 35;
   } else {
-    return null;
+    return 0;
   }
 });
+console.log(markerPosY);
 
 const cellWidth = computed(() => {
   if (countries.value.length) return width.value / (countries.value.length - 1);
@@ -359,7 +360,7 @@ watch(
 .marker-container {
   position: relative;
   display: flex;
-  justify-content: right;
+  justify-content: left;
   height: 0;
   width: 100%;
 }
