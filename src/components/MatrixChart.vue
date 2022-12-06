@@ -180,9 +180,6 @@ onMounted(async () => {
         }),
         ticks: {
           display: true,
-          font: {
-            size: 4,
-          },
           callback: function (value, index) {
             const countries = Object.keys(stateInCountry).sort((a, b) => {
               if (stateInCountry[a] < stateInCountry[b]) return -1;
