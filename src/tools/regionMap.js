@@ -26,40 +26,26 @@ const styleRegion = (region, matrixData, maxValue, choropleth) => {
   };
 };
 
-// const highlightFeature = (e) => {
-//   const layer = e.target;
-
-//   layer.setStyle({
-//     weight: 5,
-//     color: "#666",
-//     dashArray: "",
-//     fillOpacity: 0.7,
-//   });
-//   layer.bringToFront();
-// };
-
-// const resetRegionHighlight = (e) => {
-//   geojson.resetStyle(e.target);
-//   e.target.bringToBack();
-// };
-
-// const onEachRegion = (region, layer) => {
-//   layer.on({
-//     mouseover: highlightFeature,
-//     mouseout: (e) => resetRegionHighlight(e),
-//   });
-// };
-
-const onEachRegion = (region, layer) => {
+const onEachRegion = (region, layer, onRegionHover) => {
   layer.on({
     add: (e) => (e.target.id = region.properties.name),
+    mouseover: () =>
+      onRegionHover([region.properties.name, region.properties.name]),
+    mouseout: () => onRegionHover([]),
   });
 };
 
-const updateRegionMap = async (matrixData, maxValue, stateData, choropleth) => {
+const updateRegionMap = async (
+  matrixData,
+  maxValue,
+  stateData,
+  choropleth,
+  onRegionHover
+) => {
   geojson = L.geoJson(stateData, {
     style: (e) => styleRegion(e, matrixData, maxValue, choropleth),
-    onEachFeature: onEachRegion,
+    onEachFeature: (region, layer) =>
+      onEachRegion(region, layer, onRegionHover),
     pane: "regions",
   });
   return geojson;

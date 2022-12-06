@@ -65,7 +65,7 @@ const htmlLegendPlugin = {
     const percent =
       (100 * Math.abs(maxValue.value)) / (maxValue.value - minValue.value);
     scale.style.background =
-      "linear-gradient(to left, #d8b365, #f5f5f5 " + percent + "%, #5ab4ac)";
+      "linear-gradient(to left, #d8b365, #e1e1e1 " + percent + "%, #5ab4ac)";
     const labelMin = document.createElement("div");
     labelMin.innerHTML = Math.round(minValue.value * 100) / 100;
     const labelMax = document.createElement("div");
@@ -94,8 +94,8 @@ const fillMatrix = async (current_region, response) => {
           const value = context.dataset.data[context.dataIndex].v;
           const convert = (val) =>
             Math.floor(
-              145 -
-                (145 - val) *
+              225 -
+                (225 - val) *
                   (Math.abs(value - midpoint) /
                     (value > midpoint
                       ? maxValue.value
@@ -153,6 +153,7 @@ const markerPosX = computed(() => {
     const index = countries.value.findIndex(
       (el) => el === props.hoveredRegions[0]
     );
+    if (index === -1) return null;
     console.log(index);
     return cellWidth.value * index + 32;
   } else {
@@ -166,6 +167,7 @@ const markerPosY = computed(() => {
       (el) => el === props.hoveredRegions[1]
     );
     console.log(index);
+    if (index === -1) return null;
     return cellHeight.value * index + 35;
   } else {
     return null;

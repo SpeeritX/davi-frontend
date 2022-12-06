@@ -176,7 +176,8 @@ export default {
           matrixData,
           this.maxRegionValue,
           stateData,
-          this.choroplethMap
+          this.choroplethMap,
+          this.emitHoverRegion
         )
       ).addTo(this.regionLayers);
       this.highlightSelectedRegions(this.selectedRegions);
@@ -212,6 +213,9 @@ export default {
     },
     calculateLegendHeight() {
       this.legendHeight = this.$refs.mapLegendContainer.clientHeight;
+    },
+    emitHoverRegion(regionName) {
+      this.$emit("updateHoveredRegions", regionName);
     },
   },
 };

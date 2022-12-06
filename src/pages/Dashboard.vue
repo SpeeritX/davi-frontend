@@ -23,6 +23,7 @@
           :selectedRegions="
             state.current_region ? state.current_region.split(',') : []
           "
+          @update-hovered-regions="(val) => (state.hoveredRegions = val)"
           :hoveredRegions="state.hoveredRegions"
         />
       </div>
