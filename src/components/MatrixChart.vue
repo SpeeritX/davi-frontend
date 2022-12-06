@@ -113,6 +113,13 @@ const fillMatrix = async (current_region, response) => {
 };
 onMounted(async () => {
   const ctx = matrixChart.value.getContext("2d");
+  const countries = Object.keys(stateInCountry).sort((a, b) => {
+    if (stateInCountry[a] < stateInCountry[b]) return -1;
+    if (stateInCountry[a] > stateInCountry[b]) return 1;
+    if (a < b) return -1;
+    if (a > b) return 1;
+    return 0;
+  });
   const options = {
     onClick: (e, e2) => {
       const item = data.datasets[0].data[e2[0]?.index];
@@ -173,19 +180,10 @@ onMounted(async () => {
     scales: {
       x: {
         type: "category",
-        labels: Object.keys(stateInCountry).sort((a, b) => {
-          if (stateInCountry[a] < stateInCountry[b]) return -1;
-          if (stateInCountry[a] > stateInCountry[b]) return 1;
-          return 0;
-        }),
+        labels: countries,
         ticks: {
           display: true,
           callback: function (value, index) {
-            const countries = Object.keys(stateInCountry).sort((a, b) => {
-              if (stateInCountry[a] < stateInCountry[b]) return -1;
-              if (stateInCountry[a] > stateInCountry[b]) return 1;
-              return 0;
-            });
             if (
               index >= 1 &&
               stateInCountry[countries[index]] ===
@@ -198,30 +196,18 @@ onMounted(async () => {
       },
       y: {
         type: "category",
-        labels: Object.keys(stateInCountry)
-          .sort((a, b) => {
-            if (stateInCountry[a] < stateInCountry[b]) return -1;
-            if (stateInCountry[a] > stateInCountry[b]) return 1;
-            return 0;
-          })
-          .reverse(),
+        labels: countries.slice().reverse(),
         ticks: {
           display: true,
           callback: function (value, index) {
-            const countries = Object.keys(stateInCountry)
-              .sort((a, b) => {
-                if (stateInCountry[a] < stateInCountry[b]) return -1;
-                if (stateInCountry[a] > stateInCountry[b]) return 1;
-                return 0;
-              })
-              .reverse();
+            const reverseCountries = countries.slice().reverse();
             if (
               index >= 1 &&
-              stateInCountry[countries[index]] ===
-                stateInCountry[countries[index - 1]]
+              stateInCountry[reverseCountries[index]] ===
+                stateInCountry[reverseCountries[index - 1]]
             )
               return;
-            return stateInCountry[countries[index]].substring(0, 2);
+            return stateInCountry[reverseCountries[index]].substring(0, 2);
           },
         },
       },
