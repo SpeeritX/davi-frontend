@@ -57,12 +57,9 @@ const fillMatrix = async (current_region, response) => {
   const matrixData = response.data;
   maxValue.value = midpoint;
   minValue.value = midpoint;
-  const regions = new Set();
-  matrixData.data.map(({ x, y, v }) => {
+  matrixData.data.map(({ v }) => {
     if (v > maxValue.value) maxValue.value = v;
     if (v < minValue.value) minValue.value = v;
-    regions.add(x);
-    regions.add(y);
   });
   const data = {
     datasets: [
@@ -104,8 +101,10 @@ const fillMatrix = async (current_region, response) => {
           return "#616161";
         },
         borderWidth: 0,
-        width: ({ chart }) => (chart.chartArea || {}).width / regions.size,
-        height: ({ chart }) => (chart.chartArea || {}).height / regions.size,
+        width: ({ chart }) =>
+          (chart.chartArea || {}).width / Object.keys(stateInCountry).length,
+        height: ({ chart }) =>
+          (chart.chartArea || {}).height / Object.keys(stateInCountry).length,
       },
     ],
   };
