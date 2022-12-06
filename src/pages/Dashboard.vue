@@ -42,6 +42,7 @@
         :current_region="state.current_region"
         @update-regions="updateRegions"
         @update-hovered-regions="(val) => (state.hoveredRegions = val)"
+        :hoveredRegions="state.hoveredRegions"
       />
       <ParallelSets
         id="parallel"
@@ -89,6 +90,7 @@ export default {
         choroplethMap: true,
         showFlightPaths: true,
         pathsOpacity: 20,
+        hoveredRegions: [],
       },
     };
   },

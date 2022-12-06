@@ -127,7 +127,6 @@ export default {
       await this.updateRegions();
     },
     hoveredRegions(regions, oldRegions) {
-      console.log(regions);
       oldRegions?.forEach((region) => {
         this.resetRegionStyle(region);
       });
@@ -184,10 +183,7 @@ export default {
       this.loading = false;
     },
     highlightSelectedRegions(regions) {
-      console.log(regions);
-
       regions?.forEach((region) => {
-        console.log(region);
         this.updateRegionStyle(region, {
           color: "mediumseagreen",
           weight: 3,
@@ -199,7 +195,6 @@ export default {
       this.regionLayers.eachLayer(function (parentLayer) {
         parentLayer.eachLayer(function (layer) {
           if (layer.id === regionName) {
-            console.log("apply style for ", regionName);
             layer.setStyle(style);
             layer.bringToFront();
           }
@@ -210,7 +205,6 @@ export default {
       this.regionLayers.eachLayer(function (parentLayer) {
         parentLayer.eachLayer(function (layer) {
           if (layer.id === regionName) {
-            console.log("reset style for ", regionName);
             parentLayer.resetStyle(layer);
           }
         });

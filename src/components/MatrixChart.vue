@@ -1,13 +1,36 @@
 <template>
-  <div class="matrix-container">
-    <canvas class="matrix-chart" ref="matrixChart"></canvas>
-    <div id="matrix-legend"></div>
+  <div>
+    <div class="marker-container">
+      <div
+        v-if="markerPosX !== null"
+        class="marker marker-x"
+        v-bind:style="{
+          'margin-top': '33px',
+          left: `${markerPosX}px`,
+          height: `${height + 5}px`,
+        }"
+      ></div>
+      <div class="marker-container">
+        <div
+          v-if="markerPosY !== null"
+          class="marker marker-y"
+          v-bind:style="{
+            top: `${markerPosY}px`,
+            width: `${width + 5}px`,
+          }"
+        ></div>
+      </div>
+    </div>
+    <div class="matrix-container">
+      <canvas class="matrix-chart" ref="matrixChart"></canvas>
+      <div id="matrix-legend"></div>
+    </div>
   </div>
 </template>
 
 <script setup>
 import Chart from "chart.js/auto";
-import { ref, onMounted, defineProps, defineEmits, watch } from "vue";
+import { ref, onMounted, defineProps, defineEmits, watch, computed } from "vue";
 import { MatrixController, MatrixElement } from "chartjs-chart-matrix";
 import zoomPlugin from "chartjs-plugin-zoom";
 import matrixService from "@/services/matrixService";
@@ -22,6 +45,7 @@ const props = defineProps({
   filters: Object,
   dates: Object,
   current_region: String,
+  hoveredRegions: Array,
 });
 const minValue = ref(0);
 const maxValue = ref(0);
@@ -70,8 +94,8 @@ const fillMatrix = async (current_region, response) => {
           const value = context.dataset.data[context.dataIndex].v;
           const convert = (val) =>
             Math.floor(
-              245 -
-                (245 - val) *
+              145 -
+                (145 - val) *
                   (Math.abs(value - midpoint) /
                     (value > midpoint
                       ? maxValue.value
@@ -110,15 +134,67 @@ const fillMatrix = async (current_region, response) => {
   };
   return data;
 };
+
+// Watch size changes
+const width = ref(0);
+const height = ref(0);
+window.addEventListener("resize", () => {
+  updateSize();
+});
+
+function updateSize() {
+  width.value = matrixChart.value.clientWidth - 33;
+  height.value = matrixChart.value.clientHeight - 63;
+  console.log(width.value, height.value);
+}
+
+const markerPosX = computed(() => {
+  if (props.hoveredRegions.length) {
+    const index = countries.value.findIndex(
+      (el) => el === props.hoveredRegions[0]
+    );
+    console.log(index);
+    return cellWidth.value * index + 32;
+  } else {
+    return null;
+  }
+});
+
+const markerPosY = computed(() => {
+  if (props.hoveredRegions.length) {
+    const index = countries.value.findIndex(
+      (el) => el === props.hoveredRegions[1]
+    );
+    console.log(index);
+    return cellHeight.value * index + 35;
+  } else {
+    return null;
+  }
+});
+
+const cellWidth = computed(() => {
+  if (countries.value.length) return width.value / (countries.value.length - 1);
+  return 1;
+});
+
+const cellHeight = computed(() => {
+  if (countries.value.length)
+    return height.value / (countries.value.length - 1);
+  return 1;
+});
+
+const countries = ref([]);
 onMounted(async () => {
   const ctx = matrixChart.value.getContext("2d");
-  const countries = Object.keys(stateInCountry).sort((a, b) => {
+  countries.value = Object.keys(stateInCountry).sort((a, b) => {
     if (stateInCountry[a] < stateInCountry[b]) return -1;
     if (stateInCountry[a] > stateInCountry[b]) return 1;
     if (a < b) return -1;
     if (a > b) return 1;
     return 0;
   });
+  console.log("countries");
+  console.log(countries.value);
   const options = {
     onClick: (e, e2) => {
       const item = data.datasets[0].data[e2[0]?.index];
@@ -126,12 +202,10 @@ onMounted(async () => {
         emit("updateRegions", undefined);
         return;
       }
-      console.log(item);
       emit("updateRegions", `${item.x},${item.y}`);
     },
     onHover: (e, e2) => {
       const item = data.datasets[0].data[e2[0]?.index];
-      console.log(item);
       if (item) {
         emit("updateHoveredRegions", [item.x, item.y]);
       } else {
@@ -179,27 +253,27 @@ onMounted(async () => {
     scales: {
       x: {
         type: "category",
-        labels: countries,
+        labels: countries.value,
         ticks: {
           display: true,
           callback: function (value, index) {
             if (
               index >= 1 &&
-              stateInCountry[countries[index]] ===
-                stateInCountry[countries[index - 1]]
+              stateInCountry[countries.value[index]] ===
+                stateInCountry[countries.value[index - 1]]
             )
               return;
-            return stateInCountry[countries[index]].substring(0, 2);
+            return stateInCountry[countries.value[index]].substring(0, 2);
           },
         },
       },
       y: {
         type: "category",
-        labels: countries.slice().reverse(),
+        labels: countries.value.slice().reverse(),
         ticks: {
           display: true,
           callback: function (value, index) {
-            const reverseCountries = countries.slice().reverse();
+            const reverseCountries = countries.value.slice().reverse();
             if (
               index >= 1 &&
               stateInCountry[reverseCountries[index]] ===
@@ -234,7 +308,9 @@ onMounted(async () => {
     options: options,
     plugins: [htmlLegendPlugin, mouseOutPlugin],
   });
+  updateSize();
 });
+
 const response = ref(null);
 watch(
   () => [props.filters, props.dates, props.current_region],
@@ -248,10 +324,13 @@ watch(
         current_region: null,
       });
     }
+    console.log("fill matrix");
 
     const data = await fillMatrix(next[2], response.value);
     chart.data = data;
-    chart?.update();
+    await chart?.update();
+    updateSize();
+    console.log("chart updated");
   }
 );
 </script>
@@ -274,6 +353,22 @@ watch(
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  height: 100%;
+}
+.marker-container {
+  position: relative;
+  display: flex;
+  justify-content: right;
+  height: 0;
+  width: 100%;
+}
+.marker {
+  position: relative;
+  background-color: red;
+}
+.marker-x {
+  width: 1px;
+}
+.marker-y {
+  height: 1px;
 }
 </style>
