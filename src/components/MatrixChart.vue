@@ -158,17 +158,17 @@ onMounted(async () => {
           },
         },
       },
-      zoom: {
-        zoom: {
-          wheel: {
-            enabled: true,
-          },
-          pinch: {
-            enabled: true,
-          },
-          mode: "xy",
-        },
-      },
+      // zoom: {
+      //   zoom: {
+      //     wheel: {
+      //       enabled: true,
+      //     },
+      //     pinch: {
+      //       enabled: true,
+      //     },
+      //     mode: "xy",
+      //   },
+      // },
     },
     scales: {
       x: {
@@ -180,6 +180,9 @@ onMounted(async () => {
         }),
         ticks: {
           display: true,
+          font: {
+            size: 4,
+          },
           callback: function (value, index) {
             const countries = Object.keys(stateInCountry).sort((a, b) => {
               if (stateInCountry[a] < stateInCountry[b]) return -1;
@@ -187,7 +190,7 @@ onMounted(async () => {
               return 0;
             });
             if (
-              index > 1 &&
+              index >= 1 &&
               stateInCountry[countries[index]] ===
                 stateInCountry[countries[index - 1]]
             )
@@ -216,7 +219,7 @@ onMounted(async () => {
               })
               .reverse();
             if (
-              index > 1 &&
+              index >= 1 &&
               stateInCountry[countries[index]] ===
                 stateInCountry[countries[index - 1]]
             )
