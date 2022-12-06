@@ -6,8 +6,20 @@
         class="marker marker-x"
         v-bind:style="{
           'margin-top': '33px',
-          left: `${markerPosX}px`,
-          height: `${height + 5}px`,
+          left: `${markerPosX + 32}px`,
+          height: `${markerPosY}px`,
+        }"
+      ></div>
+    </div>
+    <div class="marker-container">
+      <div
+        v-if="markerPosX !== null"
+        class="marker marker-x"
+        v-bind:style="{
+          'margin-top': '33px',
+          top: `${markerPosY + 4}px`,
+          left: `${markerPosX + 32}px`,
+          height: `${height - markerPosY}px`,
         }"
       ></div>
     </div>
@@ -16,8 +28,22 @@
         v-if="markerPosY !== null"
         class="marker marker-y"
         v-bind:style="{
+          'margin-top': '35px',
+          left: '32px',
           top: `${markerPosY}px`,
-          width: `${width + 5}px`,
+          width: `${markerPosX - 1}px`,
+        }"
+      ></div>
+    </div>
+    <div class="marker-container">
+      <div
+        v-if="markerPosY !== null"
+        class="marker marker-y"
+        v-bind:style="{
+          'margin-top': '35px',
+          top: `${markerPosY}px`,
+          left: `${markerPosX + 32 + 3}px`,
+          width: `${width - markerPosX}px`,
         }"
       ></div>
     </div>
@@ -155,7 +181,7 @@ const markerPosX = computed(() => {
     );
     if (index === -1) return null;
     console.log(index);
-    return cellWidth.value * index + 32;
+    return cellWidth.value * index;
   } else {
     return 0;
   }
@@ -168,7 +194,7 @@ const markerPosY = computed(() => {
     );
     console.log(index);
     if (index === -1) return null;
-    return cellHeight.value * index + 35;
+    return cellHeight.value * index;
   } else {
     return 0;
   }
