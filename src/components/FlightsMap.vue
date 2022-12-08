@@ -184,7 +184,7 @@ export default {
     highlightSelectedRegions(regions) {
       regions?.forEach((region) => {
         this.updateRegionStyle(region, {
-          color: "mediumseagreen",
+          color: "black",
           weight: 3,
           dashArray: "",
         });

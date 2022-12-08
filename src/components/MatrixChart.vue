@@ -5,9 +5,10 @@
         v-if="markerPosX !== null"
         class="marker marker-x"
         v-bind:style="{
-          'margin-top': '33px',
-          left: `${markerPosX + 32}px`,
-          height: `${markerPosY}px`,
+          'margin-top': `${marginTop}px`,
+          'margin-left': `${marginLeft + 2}px`,
+          left: `${markerPosX}px`,
+          height: `${markerPosY - 1}px`,
         }"
       ></div>
     </div>
@@ -16,10 +17,11 @@
         v-if="markerPosX !== null"
         class="marker marker-x"
         v-bind:style="{
-          'margin-top': '33px',
+          'margin-top': `${marginTop}px`,
+          'margin-left': `${marginLeft + 2}px`,
           top: `${markerPosY + 4}px`,
-          left: `${markerPosX + 32}px`,
-          height: `${height - markerPosY}px`,
+          left: `${markerPosX}px`,
+          height: `${height - markerPosY + 1}px`,
         }"
       ></div>
     </div>
@@ -28,8 +30,8 @@
         v-if="markerPosY !== null"
         class="marker marker-y"
         v-bind:style="{
-          'margin-top': '35px',
-          left: '32px',
+          'margin-top': `${marginTop + 1}px`,
+          'margin-left': `${marginLeft}px`,
           top: `${markerPosY}px`,
           width: `${markerPosX - 1}px`,
         }"
@@ -40,9 +42,10 @@
         v-if="markerPosY !== null"
         class="marker marker-y"
         v-bind:style="{
-          'margin-top': '35px',
+          'margin-top': `${marginTop + 1}px`,
+          'margin-left': `${marginLeft + 5}px`,
           top: `${markerPosY}px`,
-          left: `${markerPosX + 32 + 3}px`,
+          left: `${markerPosX}px`,
           width: `${width - markerPosX}px`,
         }"
       ></div>
@@ -77,7 +80,7 @@ const minValue = ref(0);
 const maxValue = ref(0);
 const emit = defineEmits(["updateRegions", "updateHoveredRegions"]);
 
-let chart;
+const chart = ref(null);
 
 const htmlLegendPlugin = {
   id: "matrix-legend",
@@ -164,14 +167,18 @@ const fillMatrix = async (current_region, response) => {
 // Watch size changes
 const width = ref(0);
 const height = ref(0);
+const marginTop = ref(0);
+const marginLeft = ref(0);
 window.addEventListener("resize", () => {
   updateSize();
 });
 
 function updateSize() {
-  width.value = matrixChart.value.clientWidth - 33;
-  height.value = matrixChart.value.clientHeight - 63;
-  console.log(width.value, height.value);
+  width.value = chart.value.chartArea.width - 5;
+  height.value = chart.value.chartArea.height - 3;
+  marginTop.value = chart.value.chartArea.top;
+  marginLeft.value = chart.value.chartArea.left;
+  console.log(matrixChart);
 }
 
 const markerPosX = computed(() => {
@@ -183,7 +190,7 @@ const markerPosX = computed(() => {
     console.log(index);
     return cellWidth.value * index;
   } else {
-    return 0;
+    return null;
   }
 });
 
@@ -196,10 +203,9 @@ const markerPosY = computed(() => {
     if (index === -1) return null;
     return cellHeight.value * index;
   } else {
-    return 0;
+    return null;
   }
 });
-console.log(markerPosY);
 
 const cellWidth = computed(() => {
   if (countries.value.length) return width.value / (countries.value.length - 1);
@@ -341,7 +347,7 @@ onMounted(async () => {
     current_region: null,
   });
   const data = await fillMatrix(props.current_region, response.value);
-  chart = new Chart(ctx, {
+  chart.value = new Chart(ctx, {
     type: "matrix",
     data: data,
     options: options,
@@ -366,8 +372,8 @@ watch(
     console.log("fill matrix");
 
     const data = await fillMatrix(next[2], response.value);
-    chart.data = data;
-    await chart?.update();
+    chart.value.data = data;
+    await chart.value?.update();
     updateSize();
     console.log("chart updated");
   }
