@@ -67,16 +67,21 @@ const getData = async (filters, dates, region) => {
     label: "Was in Ukraine",
   };
 
-  var color = new Int8Array(parallel.length);
+  var color = new Int8Array(parallel.length).fill(1);
   var colorscale = [
-    [0, "lightsteelblue"],
-    [1, "mediumseagreen"],
+    [0, "#969696"],
+    [1, "#7c009b"],
   ];
 
   var trace1 = {
     type: "parcats",
     dimensions: [SPIDim, squawkDim, ukraineDim],
-    line: { color: color, colorscale: colorscale },
+    line: {
+      color: color,
+      colorscale: colorscale,
+      cmin: 0,
+      cmax: 1,
+    },
     hoveron: "color",
     hoverinfo: "count+probability",
     labelfont: { size: 14 },
@@ -86,6 +91,10 @@ const getData = async (filters, dates, region) => {
   var layout = { margin: { l: 0, r: 4, t: 40, b: 30 }, autosize: true };
   await Plotly.newPlot("parallel-sets", data, layout);
   var gd = document.getElementById("parallel-sets");
+  setTimeout(() => {
+    console.log(color);
+    Plotly.restyle("parallel-sets", { "line.color": [color.slice()] }, 0);
+  }, 1000);
 
   var update_color = (points_data) => {
     const newFilters = {
@@ -97,10 +106,8 @@ const getData = async (filters, dates, region) => {
     emit("updateFilters", newFilters);
 
     var new_color = new Int8Array(parallel.length);
-    var selection = [];
     for (var i = 0; i < points_data.points.length; i++) {
       new_color[points_data.points[i].pointNumber] = 1;
-      selection.push(points_data.points[i].pointNumber);
     }
     // Update color of selected paths in parallel categories diagram
     Plotly.restyle("parallel-sets", { "line.color": [new_color] }, 0);
@@ -126,7 +133,7 @@ async function clearFilters() {
   appliedFilters.value = null;
   Plotly.restyle(
     "parallel-sets",
-    { "line.color": [new Int8Array(dataLength.value)] },
+    { "line.color": [new Int8Array(dataLength.value).fill(1)] },
     0
   );
 }

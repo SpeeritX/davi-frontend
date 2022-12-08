@@ -10,7 +10,7 @@ export default {
 
 <style>
 :root {
-  --primary-color: #4e64a0;
+  --primary-color: #73437e;
   --border-color: #a4a4a4;
 }
 
@@ -65,7 +65,6 @@ button svg {
   color: black;
 }
 h2 {
-  color: var(--primary-color);
   font-weight: 400;
   width: 100%;
   padding: 0.8rem 0;
