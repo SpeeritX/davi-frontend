@@ -80,7 +80,8 @@ const minValue = ref(0);
 const maxValue = ref(0);
 const emit = defineEmits(["updateRegions", "updateHoveredRegions"]);
 
-const chart = ref(null);
+let chartRef;
+const chartSize = ref(null);
 
 const htmlLegendPlugin = {
   id: "matrix-legend",
@@ -169,15 +170,11 @@ const width = ref(0);
 const height = ref(0);
 const marginTop = ref(0);
 const marginLeft = ref(0);
-window.addEventListener("resize", () => {
-  updateSize();
-});
-
 function updateSize() {
-  width.value = chart.value.chartArea.width - 5;
-  height.value = chart.value.chartArea.height - 3;
-  marginTop.value = chart.value.chartArea.top;
-  marginLeft.value = chart.value.chartArea.left;
+  width.value = chartSize.value.width - 5;
+  height.value = chartSize.value.height - 3;
+  marginTop.value = chartSize.value.top;
+  marginLeft.value = chartSize.value.left;
 }
 
 const markerPosX = computed(() => {
@@ -341,12 +338,13 @@ onMounted(async () => {
     current_region: null,
   });
   const data = await fillMatrix(props.current_region, response.value);
-  chart.value = new Chart(ctx, {
+  chartRef = new Chart(ctx, {
     type: "matrix",
     data: data,
     options: options,
     plugins: [htmlLegendPlugin, mouseOutPlugin],
   });
+  chartSize.value = chartRef.chartArea;
   updateSize();
 });
 
@@ -354,6 +352,8 @@ const response = ref(null);
 watch(
   () => [props.filters, props.dates, props.current_region],
   async (next, prev) => {
+    console.log("next");
+    console.log(next);
     if (
       JSON.stringify([next[0], next[1]]) !== JSON.stringify([prev[0], prev[1]])
     ) {
@@ -364,8 +364,8 @@ watch(
       });
     }
     const data = await fillMatrix(next[2], response.value);
-    chart.value.data = data;
-    await chart.value?.update();
+    chartRef.data = data;
+    await chartRef.update();
     updateSize();
   }
 );
