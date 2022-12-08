@@ -283,6 +283,11 @@ onMounted(async () => {
       x: {
         type: "category",
         labels: countries.value,
+        grid: {
+          color: "#777",
+          z: 1000,
+          //lineWidth: 1.3,
+        },
         ticks: {
           display: true,
           callback: function (value, index) {
@@ -292,13 +297,18 @@ onMounted(async () => {
                 stateInCountry[countries.value[index - 1]]
             )
               return;
-            return stateInCountry[countries.value[index]].substring(0, 2);
+            return ""; //stateInCountry[countries.value[index]].substring(0, 2);
           },
         },
       },
       y: {
         type: "category",
         labels: countries.value.slice().reverse(),
+        grid: {
+          color: "#777",
+          z: 1000,
+          //lineWidth: 1.3,
+        },
         ticks: {
           display: true,
           callback: function (value, index) {
@@ -309,7 +319,7 @@ onMounted(async () => {
                 stateInCountry[reverseCountries[index - 1]]
             )
               return;
-            return stateInCountry[reverseCountries[index]].substring(0, 2);
+            return ""; //stateInCountry[reverseCountries[index]].substring(0, 2);
           },
         },
       },
