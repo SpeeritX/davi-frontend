@@ -178,7 +178,6 @@ function updateSize() {
   height.value = chart.value.chartArea.height - 3;
   marginTop.value = chart.value.chartArea.top;
   marginLeft.value = chart.value.chartArea.left;
-  console.log(matrixChart);
 }
 
 const markerPosX = computed(() => {
@@ -187,7 +186,6 @@ const markerPosX = computed(() => {
       (el) => el === props.hoveredRegions[0]
     );
     if (index === -1) return null;
-    console.log(index);
     return cellWidth.value * index;
   } else {
     return null;
@@ -199,7 +197,6 @@ const markerPosY = computed(() => {
     const index = countries.value.findIndex(
       (el) => el === props.hoveredRegions[1]
     );
-    console.log(index);
     if (index === -1) return null;
     return cellHeight.value * index;
   } else {
@@ -228,8 +225,6 @@ onMounted(async () => {
     if (a > b) return 1;
     return 0;
   });
-  console.log("countries");
-  console.log(countries.value);
   const options = {
     onClick: (e, e2) => {
       const item = data.datasets[0].data[e2[0]?.index];
@@ -336,7 +331,6 @@ onMounted(async () => {
     beforeEvent(chart, args) {
       const event = args.event;
       if (event.type === "mouseout") {
-        console.log("mouse out");
         emit("updateHoveredRegions", []);
       }
     },
@@ -369,13 +363,10 @@ watch(
         current_region: null,
       });
     }
-    console.log("fill matrix");
-
     const data = await fillMatrix(next[2], response.value);
     chart.value.data = data;
     await chart.value?.update();
     updateSize();
-    console.log("chart updated");
   }
 );
 </script>

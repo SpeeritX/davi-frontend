@@ -92,7 +92,6 @@ const getData = async (filters, dates, region) => {
   await Plotly.newPlot("parallel-sets", data, layout);
   var gd = document.getElementById("parallel-sets");
   setTimeout(() => {
-    console.log(color);
     Plotly.restyle("parallel-sets", { "line.color": [color.slice()] }, 0);
   }, 1000);
 
@@ -136,6 +135,7 @@ async function clearFilters() {
     { "line.color": [new Int8Array(dataLength.value).fill(1)] },
     0
   );
+  emit("updateFilters", {});
 }
 </script>
 
