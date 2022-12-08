@@ -113,7 +113,7 @@ export default {
   margin: 0.2rem 0;
 }
 .choropleth-map-header {
-  color: var(--primary-color);
+  color: #4a4a4a;
   margin: 0.5rem 0 0.2rem 0;
   font-size: 0.9rem;
 }
