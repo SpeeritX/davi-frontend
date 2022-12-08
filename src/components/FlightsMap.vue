@@ -87,13 +87,10 @@ export default {
     this.map.getPane("flights").style.zIndex = 998;
     this.map.createPane("regions");
     this.map.getPane("regions").style.zIndex = 900;
-    this.map.createPane("countries");
-    this.map.getPane("countries").style.zIndex = 910;
     this.flightsLayers = L.layerGroup();
     this.regionLayers = L.layerGroup();
     this.flightsLayers.addTo(this.map);
     this.regionLayers.addTo(this.map);
-    setCountryMap(countryData).addTo(this.map);
     await this.updateRegions();
     await this.updateFlights();
     this.loading = false;
@@ -180,6 +177,7 @@ export default {
           this.emitHoverRegion
         )
       ).addTo(this.regionLayers);
+      setCountryMap(countryData).addTo(this.map);
       this.highlightSelectedRegions(this.selectedRegions);
       this.loading = false;
     },
@@ -207,6 +205,7 @@ export default {
         parentLayer.eachLayer(function (layer) {
           if (layer.id === regionName) {
             parentLayer.resetStyle(layer);
+            parentLayer.bringToBack();
           }
         });
       });
