@@ -174,7 +174,8 @@ export default {
           this.maxRegionValue,
           stateData,
           this.choroplethMap,
-          this.emitHoverRegion
+          this.emitHoverRegion,
+          this.emitClickRegion
         )
       ).addTo(this.regionLayers);
       setCountryMap(countryData).addTo(this.map);
@@ -215,6 +216,9 @@ export default {
     },
     emitHoverRegion(regionName) {
       this.$emit("updateHoveredRegions", regionName);
+    },
+    emitClickRegion(regionName) {
+      this.$emit("updateClickedRegions", regionName);
     },
   },
 };

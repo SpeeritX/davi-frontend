@@ -26,12 +26,14 @@ const styleRegion = (region, matrixData, maxValue, choropleth) => {
   };
 };
 
-const onEachRegion = (region, layer, onRegionHover) => {
+const onEachRegion = (region, layer, onRegionHover, onRegionClick) => {
   layer.on({
     add: (e) => (e.target.id = region.properties.name),
     mouseover: () =>
       onRegionHover([region.properties.name, region.properties.name]),
     mouseout: () => onRegionHover([]),
+    click: () =>
+      onRegionClick([region.properties.name, region.properties.name]),
   });
 };
 
@@ -40,12 +42,13 @@ const updateRegionMap = async (
   maxValue,
   stateData,
   choropleth,
-  onRegionHover
+  onRegionHover,
+  onRegionClick
 ) => {
   geojson = L.geoJson(stateData, {
     style: (e) => styleRegion(e, matrixData, maxValue, choropleth),
     onEachFeature: (region, layer) =>
-      onEachRegion(region, layer, onRegionHover),
+      onEachRegion(region, layer, onRegionHover, onRegionClick),
     pane: "regions",
   });
   return geojson;

@@ -121,6 +121,7 @@ const fillMatrix = async (current_region, response) => {
         label: "Basic matrix",
         data: matrixData.data,
         backgroundColor(context) {
+          if (!context.dataset.data[context.dataIndex]) return
           const value = context.dataset.data[context.dataIndex].v;
           const convert = (val) =>
             Math.floor(
@@ -224,7 +225,7 @@ onMounted(async () => {
   });
   const options = {
     onClick: (e, e2) => {
-      const item = data.datasets[0].data[e2[0]?.index];
+      const item = e.chart.data.datasets[0].data[e2[0]?.index];
       if (props.current_region === `${item.x},${item.y}`) {
         emit("updateRegions", undefined);
         return;
@@ -232,7 +233,7 @@ onMounted(async () => {
       emit("updateRegions", `${item.x},${item.y}`);
     },
     onHover: (e, e2) => {
-      const item = data.datasets[0].data[e2[0]?.index];
+      const item = e.chart.data.datasets[0].data[e2[0]?.index];
       if (item) {
         emit("updateHoveredRegions", [item.x, item.y]);
       } else {

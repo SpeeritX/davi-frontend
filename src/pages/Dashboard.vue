@@ -25,6 +25,7 @@
           "
           @update-hovered-regions="(val) => (state.hoveredRegions = val)"
           :hoveredRegions="state.hoveredRegions"
+          @update-clicked-regions="(val) => updateRegions(`${val[0]},${val[1]}`)"
         />
       </div>
       <DateSlider
