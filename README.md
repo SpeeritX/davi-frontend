@@ -1,29 +1,5 @@
-# davi-ukraine
+# Frontend for Data Visualisation Project - Exploring the Ukraine Airspace Dataset
 
-## Project setup
+Learn more about the project in the main repository: [Exploring the Ukraine Airspace Dataset](https://github.com/SpeeritX/davi-project)
 
-```
-npm install
-```
-
-### Compiles and hot-reloads for development
-
-```
-npm run serve
-```
-
-### Compiles and minifies for production
-
-```
-npm run build
-```
-
-### Lints and fixes files
-
-```
-npm run lint
-```
-
-### Customize configuration
-
-See [Configuration Reference](https://cli.vuejs.org/config/).
+To run use the docker compose in the main repository.
